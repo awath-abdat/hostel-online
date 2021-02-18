@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:android="http://schemas.android.com/apk/res/android">
+    <item
+        android:id="@+id/menu_profile"
+        android:title="@string/profile"
+        android:icon="@drawable/user_white"
+        app:showAsAction="ifRoom"  />
+    <item
+        android:id="@+id/make_final_payment"
+        android:title="@string/make_final_payment"
+        app:showAsAction="never" />
+    <item
+        android:id="@+id/edit_profile"
+        android:title="@string/edit_profile"
+        app:showAsAction="never" />
+    <item
+        android:id="@+id/login_info"
+        android:title="@string/login_info"
+        app:showAsAction="never" />
+</menu>

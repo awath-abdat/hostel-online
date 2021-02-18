@@ -1,0 +1,646 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/white"
+    tools:context=".EditOrAddHostel">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingBottom="25dp">
+
+        <Button
+            android:id="@+id/update_capture_location"
+            style="@style/button_light_style"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="20dp"
+            android:layout_marginTop="12dp"
+            android:layout_weight="1"
+            android:paddingStart="15dp"
+            android:paddingTop="5dp"
+            android:paddingEnd="15dp"
+            android:paddingBottom="5dp"
+            android:text="@string/capture_location"
+            android:textAllCaps="false"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/update_hostel_description_container" />
+
+        <Button
+            android:id="@+id/update_levels_minus"
+            style="@style/button_light_style"
+            android:layout_width="70dp"
+            android:layout_height="40dp"
+            android:layout_marginTop="12dp"
+            android:paddingStart="0dp"
+            android:paddingTop="0dp"
+            android:paddingEnd="0dp"
+            android:paddingBottom="0dp"
+            android:text="@string/levels_minus"
+            android:textSize="20sp"
+            app:layout_constraintEnd_toStartOf="@+id/update_level_number_container"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/update_general_description2" />
+
+        <Button
+            android:id="@+id/update_levels_plus"
+            style="@style/button_light_style"
+            android:layout_width="70dp"
+            android:layout_height="40dp"
+            android:layout_marginStart="12dp"
+            android:paddingStart="0dp"
+            android:paddingTop="0dp"
+            android:paddingEnd="0dp"
+            android:paddingBottom="0dp"
+            android:text="@string/levels_plus"
+            android:textSize="20sp"
+            app:layout_constraintBaseline_toBaselineOf="@+id/update_level_number_container"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintStart_toEndOf="@+id/update_level_number_container" />
+
+        <Button
+            android:id="@+id/update_cancel_button"
+            style="@style/button_light_style"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="12dp"
+            android:background="@drawable/field_background"
+            android:text="@string/cancel"
+            android:textAllCaps="false"
+            android:textColor="@color/uigray"
+            app:layout_constraintEnd_toStartOf="@+id/update_add_edit_button"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/update_room_type_fees_container" />
+
+        <Button
+            android:id="@+id/update_add_edit_button"
+            style="@style/button_light_style"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/add"
+            android:textAllCaps="false"
+            app:layout_constraintBottom_toBottomOf="@id/update_cancel_button"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintStart_toEndOf="@+id/update_cancel_button" />
+
+        <ImageView
+            android:id="@+id/update_image_view"
+            android:layout_width="wrap_content"
+            android:layout_height="200dp"
+            android:contentDescription="@string/app_name"
+            android:scaleType="centerCrop"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:srcCompat="@mipmap/robert" />
+
+        <ImageView
+            android:id="@+id/update_capture_warning"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="12dp"
+            android:layout_marginBottom="6dp"
+            android:contentDescription="@string/app_name"
+            app:layout_constraintBottom_toBottomOf="@+id/update_capture_location"
+            app:layout_constraintStart_toEndOf="@+id/update_capture_location"
+            app:srcCompat="@drawable/warning" />
+
+        <Spinner
+            android:id="@+id/update_hostel_gender_spinner"
+            style="@style/spinner_style"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="20dp"
+            android:layout_marginTop="12dp"
+            android:layout_marginEnd="20dp"
+            android:dropDownWidth="match_parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/update_hostel_name_container" />
+
+        <TextView
+            android:id="@+id/update_general_description"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:background="@color/uicyan"
+            android:paddingStart="20dp"
+            android:paddingTop="5dp"
+            android:paddingEnd="15dp"
+            android:paddingBottom="5dp"
+            android:text="@string/general_description"
+            android:textColor="@color/white"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/update_image_view" />
+
+        <TextView
+            android:id="@+id/update_general_description2"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="24dp"
+            android:background="@color/uicyan"
+            android:paddingStart="20dp"
+            android:paddingTop="5dp"
+            android:paddingEnd="15dp"
+            android:paddingBottom="5dp"
+            android:text="@string/hostel_building_description"
+            android:textColor="@color/white"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.0"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/update_capture_location" />
+
+        <Button
+            android:id="@+id/update_single_room_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="12dp"
+            android:background="@android:color/transparent"
+            android:focusable="auto"
+            android:fontFamily="@font/segoeui"
+            android:text="@string/single_room"
+            android:textAllCaps="false"
+            android:textColor="@color/uicyan"
+            android:textSize="20sp"
+            app:layout_constraintEnd_toStartOf="@+id/update_double_room_button"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/update_level_view_pager" />
+
+        <Button
+            android:id="@+id/update_tripple_room_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="20dp"
+            android:layout_marginTop="12dp"
+            android:background="@android:color/transparent"
+            android:focusable="auto"
+            android:fontFamily="@font/segoeui"
+            android:text="@string/tripple_room"
+            android:textAllCaps="false"
+            android:textColor="@color/uigray"
+            android:textSize="20sp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintStart_toEndOf="@+id/update_double_room_button"
+            app:layout_constraintTop_toBottomOf="@+id/update_level_view_pager" />
+
+        <Button
+            android:id="@+id/update_double_room_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="20dp"
+            android:layout_marginTop="12dp"
+            android:background="@android:color/transparent"
+            android:fontFamily="@font/segoeui"
+            android:text="@string/double_room"
+            android:textAllCaps="false"
+            android:textColor="@color/uigray"
+            android:textSize="20sp"
+            app:layout_constraintEnd_toStartOf="@+id/update_tripple_room_button"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintStart_toEndOf="@+id/update_single_room_button"
+            app:layout_constraintTop_toBottomOf="@+id/update_level_view_pager" />
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/update_room_type_fees_container"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:layout_constraintTop_toBottomOf="@id/update_single_room_button">
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/update_single_room_container"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent">
+
+                <ImageView
+                    android:id="@+id/update_single_room_image"
+                    android:layout_width="wrap_content"
+                    android:layout_height="200dp"
+                    android:layout_marginStart="20dp"
+                    android:layout_marginTop="12dp"
+                    android:layout_marginEnd="20dp"
+                    android:background="@drawable/field_background"
+                    android:contentDescription="@string/app_name"
+                    android:scaleType="centerCrop"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/update_single_room_booking_fee_container"
+                    app:srcCompat="@mipmap/rooma" />
+
+                <com.google.android.material.floatingactionbutton.FloatingActionButton
+                    android:id="@+id/update_floating_update_add_single_room_image"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:background="@color/uicyan"
+                    android:backgroundTint="@color/uicyan"
+                    android:clickable="true"
+                    android:contentDescription="@string/app_name"
+                    android:focusable="true"
+                    app:layout_constraintBottom_toBottomOf="@id/update_single_room_image"
+                    app:layout_constraintEnd_toEndOf="@id/update_single_room_image"
+                    app:layout_constraintStart_toStartOf="@id/update_single_room_image"
+                    app:layout_constraintTop_toTopOf="@id/update_single_room_image"
+                    app:srcCompat="@android:drawable/ic_input_add" />
+
+                <com.google.android.material.textfield.TextInputLayout
+                    android:id="@+id/update_single_room_booking_fee_container"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="20dp"
+                    android:layout_marginTop="12dp"
+                    android:layout_marginEnd="20dp"
+                    android:background="@drawable/field_background"
+                    app:hintEnabled="false"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/update_single_room_price_container">
+
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/update_single_room_booking_fee"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:background="@android:color/transparent"
+                        android:hint="@string/single_room_booking_fee"
+                        android:inputType="number"
+                        android:paddingStart="25dp"
+                        android:paddingTop="5dp"
+                        android:paddingEnd="15dp"
+                        android:paddingBottom="5dp" />
+                </com.google.android.material.textfield.TextInputLayout>
+
+                <com.google.android.material.textfield.TextInputLayout
+                    android:id="@+id/update_single_room_price_container"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="20dp"
+                    android:layout_marginTop="20dp"
+                    android:layout_marginEnd="20dp"
+                    android:background="@drawable/field_background"
+                    app:hintEnabled="false"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent">
+
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/update_single_room_price"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:background="@android:color/transparent"
+                        android:hint="@string/single_room_price"
+                        android:inputType="number"
+                        android:paddingStart="25dp"
+                        android:paddingTop="5dp"
+                        android:paddingEnd="15dp"
+                        android:paddingBottom="5dp" />
+                </com.google.android.material.textfield.TextInputLayout>
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/update_double_room_container"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:visibility="gone"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent">
+
+                <ImageView
+                    android:id="@+id/update_double_room_image"
+                    android:layout_width="wrap_content"
+                    android:layout_height="200dp"
+                    android:layout_marginStart="20dp"
+                    android:layout_marginTop="12dp"
+                    android:layout_marginEnd="20dp"
+                    android:background="@drawable/field_background"
+                    android:contentDescription="@string/app_name"
+                    android:scaleType="centerCrop"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/update_double_room_booking_fee_container"
+                    app:srcCompat="@mipmap/rooma" />
+
+                <com.google.android.material.floatingactionbutton.FloatingActionButton
+                    android:id="@+id/update_floating_update_add_double_room_image"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:background="@color/uicyan"
+                    android:backgroundTint="@color/uicyan"
+                    android:clickable="true"
+                    android:contentDescription="@string/app_name"
+                    android:focusable="true"
+                    app:layout_constraintBottom_toBottomOf="@id/update_double_room_image"
+                    app:layout_constraintEnd_toEndOf="@id/update_double_room_image"
+                    app:layout_constraintStart_toStartOf="@id/update_double_room_image"
+                    app:layout_constraintTop_toTopOf="@id/update_double_room_image"
+                    app:srcCompat="@android:drawable/ic_input_add" />
+
+                <com.google.android.material.textfield.TextInputLayout
+                    android:id="@+id/update_double_room_booking_fee_container"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="20dp"
+                    android:layout_marginTop="12dp"
+                    android:layout_marginEnd="20dp"
+                    android:background="@drawable/field_background"
+                    android:visibility="visible"
+                    app:hintEnabled="false"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/update_double_room_price_container">
+
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/update_double_room_booking_fee"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:background="@android:color/transparent"
+                        android:hint="@string/single_room_booking_fee"
+                        android:inputType="number"
+                        android:paddingStart="25dp"
+                        android:paddingTop="5dp"
+                        android:paddingEnd="15dp"
+                        android:paddingBottom="5dp" />
+                </com.google.android.material.textfield.TextInputLayout>
+
+                <com.google.android.material.textfield.TextInputLayout
+                    android:id="@+id/update_double_room_price_container"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="20dp"
+                    android:layout_marginTop="20dp"
+                    android:layout_marginEnd="20dp"
+                    android:background="@drawable/field_background"
+                    android:visibility="visible"
+                    app:hintEnabled="false"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent">
+
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/update_double_room_price"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:background="@android:color/transparent"
+                        android:hint="@string/single_room_price"
+                        android:inputType="number"
+                        android:paddingStart="25dp"
+                        android:paddingTop="5dp"
+                        android:paddingEnd="15dp"
+                        android:paddingBottom="5dp" />
+                </com.google.android.material.textfield.TextInputLayout>
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/update_tripple_room_container"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:visibility="gone"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent">
+
+                <ImageView
+                    android:id="@+id/update_tripple_room_image"
+                    android:layout_width="wrap_content"
+                    android:layout_height="200dp"
+                    android:layout_marginStart="20dp"
+                    android:layout_marginTop="12dp"
+                    android:layout_marginEnd="20dp"
+                    android:background="@drawable/field_background"
+                    android:contentDescription="@string/app_name"
+                    android:scaleType="centerCrop"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/update_tripple_room_booking_fee_container"
+                    app:srcCompat="@mipmap/rooma" />
+
+                <com.google.android.material.floatingactionbutton.FloatingActionButton
+                    android:id="@+id/update_floating_update_add_tripple_room_image"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:background="@color/uicyan"
+                    android:backgroundTint="@color/uicyan"
+                    android:clickable="true"
+                    android:contentDescription="@string/app_name"
+                    android:focusable="true"
+                    app:layout_constraintBottom_toBottomOf="@id/update_tripple_room_image"
+                    app:layout_constraintEnd_toEndOf="@id/update_tripple_room_image"
+                    app:layout_constraintStart_toStartOf="@id/update_tripple_room_image"
+                    app:layout_constraintTop_toTopOf="@id/update_tripple_room_image"
+                    app:srcCompat="@android:drawable/ic_input_add" />
+
+                <com.google.android.material.textfield.TextInputLayout
+                    android:id="@+id/update_tripple_room_booking_fee_container"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="20dp"
+                    android:layout_marginTop="12dp"
+                    android:layout_marginEnd="20dp"
+                    android:background="@drawable/field_background"
+                    android:visibility="visible"
+                    app:hintEnabled="false"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/update_tripple_room_price_container">
+
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/update_tripple_room_booking_fee"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:background="@android:color/transparent"
+                        android:hint="@string/single_room_booking_fee"
+                        android:inputType="number"
+                        android:paddingStart="25dp"
+                        android:paddingTop="5dp"
+                        android:paddingEnd="15dp"
+                        android:paddingBottom="5dp" />
+                </com.google.android.material.textfield.TextInputLayout>
+
+                <com.google.android.material.textfield.TextInputLayout
+                    android:id="@+id/update_tripple_room_price_container"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="20dp"
+                    android:layout_marginTop="20dp"
+                    android:layout_marginEnd="20dp"
+                    android:background="@drawable/field_background"
+                    android:visibility="visible"
+                    app:hintEnabled="false"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent">
+
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/update_tripple_room_price"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:background="@android:color/transparent"
+                        android:hint="@string/single_room_price"
+                        android:inputType="number"
+                        android:paddingStart="25dp"
+                        android:paddingTop="5dp"
+                        android:paddingEnd="15dp"
+                        android:paddingBottom="5dp" />
+                </com.google.android.material.textfield.TextInputLayout>
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/update_hostel_name_container"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="20dp"
+            android:layout_marginTop="12dp"
+            android:layout_marginEnd="20dp"
+            android:background="@drawable/field_background"
+            app:hintEnabled="false"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/update_general_description">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/update_hostel_name"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@android:color/transparent"
+                android:hint="@string/name_of_hostel"
+                android:paddingStart="25dp"
+                android:paddingTop="5dp"
+                android:paddingEnd="15dp"
+                android:paddingBottom="5dp" />
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/update_hostel_description_container"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginStart="20dp"
+            android:layout_marginTop="12dp"
+            android:layout_marginEnd="20dp"
+            android:background="@drawable/field_background"
+            app:hintEnabled="false"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/update_hostel_gender_spinner">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/update_hostel_description"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@android:color/transparent"
+                android:hint="@string/description_of_hostel"
+                android:inputType="textMultiLine"
+                android:lines="5"
+                android:maxLength="500"
+                android:maxLines="5"
+                android:paddingStart="25dp"
+                android:paddingTop="5dp"
+                android:paddingEnd="15dp"
+                android:paddingBottom="5dp" />
+
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/update_level_number_container"
+            android:layout_width="70dp"
+            android:layout_height="42dp"
+            android:layout_marginStart="12dp"
+            android:background="@drawable/field_background"
+            app:hintEnabled="false"
+            app:layout_constraintBaseline_toBaselineOf="@id/update_levels_minus"
+            app:layout_constraintEnd_toStartOf="@+id/update_levels_plus"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintStart_toEndOf="@+id/update_levels_minus">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/update_level_number"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@android:color/transparent"
+                android:hint="@string/one"
+                android:inputType="numberDecimal"
+                android:maxLength="1"
+                android:paddingStart="15dp"
+                android:paddingTop="5dp"
+                android:paddingEnd="15dp"
+                android:paddingBottom="5dp"
+                android:textAlignment="center" />
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <com.hostel_online.app.CustomViewPager
+            android:id="@+id/update_level_view_pager"
+            android:layout_width="0dp"
+            android:layout_height="400dp"
+            android:layout_marginStart="20dp"
+            android:layout_marginTop="12dp"
+            android:layout_marginEnd="20dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/update_level_number_container">
+
+            <com.google.android.material.tabs.TabLayout
+                android:id="@+id/update_level_tab_layout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="0dp"
+                android:layout_marginTop="12dp"
+                android:layout_marginEnd="0dp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="parent"
+                app:tabGravity="center"
+                app:tabIndicatorColor="@color/uicyan"
+                app:tabMode="scrollable"
+                app:tabSelectedTextColor="@color/uicyan"
+                app:tabTextColor="@color/uicyan">
+
+                <com.google.android.material.tabs.TabItem
+                    android:id="@+id/update_level_one"
+                    style="@style/tab_item_style"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/level_one" />
+
+                <com.google.android.material.tabs.TabItem
+                    android:id="@+id/update_level_two"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/level_two" />
+
+                <com.google.android.material.tabs.TabItem
+                    android:id="@+id/update_level_three"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/level_three" />
+
+            </com.google.android.material.tabs.TabLayout>
+        </com.hostel_online.app.CustomViewPager>
+
+        <com.google.android.material.floatingactionbutton.FloatingActionButton
+            android:id="@+id/update_floating_update_add_image"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@color/uicyan"
+            android:backgroundTint="@color/uicyan"
+            android:clickable="true"
+            android:contentDescription="@string/app_name"
+            app:layout_constraintBottom_toBottomOf="@+id/update_image_view"
+            app:layout_constraintEnd_toEndOf="@+id/update_image_view"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="@+id/update_image_view"
+            app:srcCompat="@android:drawable/ic_input_add"
+            android:focusable="true" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</ScrollView>

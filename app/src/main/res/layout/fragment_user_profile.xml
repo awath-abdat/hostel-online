@@ -1,0 +1,184 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".user_profile">
+
+    <ImageView
+        android:id="@+id/user_profile"
+        android:layout_width="20dp"
+        android:layout_height="20dp"
+        android:layout_marginStart="70dp"
+        android:contentDescription="@string/app_name"
+        app:layout_constraintBottom_toBottomOf="@+id/user_profile_text"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/user_profile_text"
+        app:srcCompat="@drawable/user" />
+
+    <ImageView
+        android:id="@+id/user_email"
+        android:layout_width="20dp"
+        android:layout_height="20dp"
+        android:layout_marginStart="70dp"
+        android:layout_marginTop="20dp"
+        android:contentDescription="@string/app_name"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/user_profile"
+        app:srcCompat="@drawable/email" />
+
+    <ImageView
+        android:id="@+id/user_phone_number"
+        android:layout_width="20dp"
+        android:layout_height="20dp"
+        android:layout_marginStart="70dp"
+        android:layout_marginTop="20dp"
+        android:contentDescription="@string/app_name"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/user_email"
+        app:srcCompat="@drawable/call" />
+
+    <ImageView
+        android:id="@+id/user_course"
+        android:layout_width="20dp"
+        android:layout_height="20dp"
+        android:layout_marginStart="70dp"
+        android:layout_marginTop="20dp"
+        android:contentDescription="@string/app_name"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/user_phone_number"
+        app:srcCompat="@drawable/briefcase" />
+
+    <ImageView
+        android:id="@+id/user_gender"
+        android:layout_width="20dp"
+        android:layout_height="20dp"
+        android:layout_marginStart="70dp"
+        android:layout_marginTop="20dp"
+        android:contentDescription="@string/app_name"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/user_course"
+        app:srcCompat="@drawable/gender" />
+
+    <ImageView
+        android:id="@+id/user_hostel"
+        android:layout_width="20dp"
+        android:layout_height="20dp"
+        android:layout_marginStart="70dp"
+        android:layout_marginTop="20dp"
+        android:contentDescription="@string/app_name"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/user_gender"
+        app:srcCompat="@drawable/hostel" />
+
+    <ImageView
+        android:id="@+id/user_room"
+        android:layout_width="20dp"
+        android:layout_height="20dp"
+        android:layout_marginStart="70dp"
+        android:layout_marginTop="20dp"
+        android:contentDescription="@string/app_name"
+        android:foregroundTint="@color/uicyan"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/user_hostel"
+        app:srcCompat="@drawable/home_icon" />
+
+    <TextView
+        android:id="@+id/user_profile_text"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="12dp"
+        android:layout_marginTop="12dp"
+        android:textColor="@color/uigray"
+        app:layout_constraintStart_toEndOf="@+id/user_profile"
+        app:layout_constraintTop_toBottomOf="@+id/header" />
+
+    <TextView
+        android:id="@+id/user_email_text"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="12dp"
+        android:layout_marginBottom="5dp"
+        android:textColor="@color/uigray"
+        app:layout_constraintBottom_toBottomOf="@+id/user_email"
+        app:layout_constraintStart_toEndOf="@+id/user_email"
+        app:layout_constraintTop_toTopOf="@+id/user_email" />
+
+    <TextView
+        android:id="@+id/user_phone_number_text"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="12dp"
+        android:textColor="@color/uigray"
+        app:layout_constraintBottom_toBottomOf="@id/user_phone_number"
+        app:layout_constraintStart_toEndOf="@id/user_phone_number"
+        app:layout_constraintTop_toTopOf="@+id/user_phone_number" />
+
+    <TextView
+        android:id="@+id/user_course_text"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="12dp"
+        android:textColor="@color/uigray"
+        app:layout_constraintBottom_toBottomOf="@id/user_course"
+        app:layout_constraintStart_toEndOf="@id/user_course"
+        app:layout_constraintTop_toTopOf="@+id/user_course" />
+
+    <TextView
+        android:id="@+id/user_gender_text"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="12dp"
+        android:textColor="@color/uigray"
+        app:layout_constraintBottom_toBottomOf="@id/user_gender"
+        app:layout_constraintStart_toEndOf="@id/user_gender"
+        app:layout_constraintTop_toTopOf="@+id/user_gender" />
+
+    <TextView
+        android:id="@+id/user_hostel_text"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="12dp"
+        android:textColor="@color/uigray"
+        app:layout_constraintBottom_toBottomOf="@id/user_hostel"
+        app:layout_constraintStart_toEndOf="@id/user_hostel"
+        app:layout_constraintTop_toTopOf="@+id/user_hostel" />
+
+    <TextView
+        android:id="@+id/user_room_text"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="12dp"
+        android:textColor="@color/uigray"
+        app:layout_constraintBottom_toBottomOf="@+id/user_room"
+        app:layout_constraintStart_toEndOf="@+id/user_room"
+        app:layout_constraintTop_toTopOf="@+id/user_room" />
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/header"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/uicyan"
+        android:paddingStart="20dp"
+        android:paddingTop="100dp"
+        android:paddingEnd="20dp"
+        android:paddingBottom="10dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <de.hdodenhof.circleimageview.CircleImageView
+            android:id="@+id/user_profile_image"
+            android:layout_width="200dp"
+            android:layout_height="200dp"
+            android:background="@drawable/image_circle"
+            android:contentDescription="@string/app_name"
+            android:src="@drawable/user"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:srcCompat="@mipmap/robert" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</androidx.constraintlayout.widget.ConstraintLayout>

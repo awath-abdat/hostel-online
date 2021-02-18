@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item
+        android:id="@+id/room_type"
+        android:icon="@drawable/user"
+        android:title="@string/type" />
+    <item
+        android:id="@+id/course_mate"
+        android:icon="@drawable/briefcase"
+        android:title="@string/course_mate" />
+    <item
+        android:id="@+id/filter_price"
+        android:icon="@drawable/price"
+        android:title="@string/Price" />
+    <item
+        android:id="@+id/fiter_freedom"
+        android:icon="@drawable/lion"
+        android:title="@string/freedom" />
+    <item
+        android:id="@+id/filter_comfort"
+        android:icon="@drawable/star"
+        android:title="@string/comfort" />
+</menu>
