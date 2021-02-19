@@ -194,7 +194,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginStart="5dp"
                 android:layout_marginEnd="5dp"
-                android:text="Akamwesi Hostels"
+                android:text=" Hostels"
                 android:textAlignment="center"
                 android:textColor="@color/white"
                 app:layout_constraintBottom_toBottomOf="parent"
@@ -205,5 +205,15 @@
         </androidx.constraintlayout.widget.ConstraintLayout>
 
     </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <include
+        layout="@layout/content_available_rooms_list"
+        android:layout_width="413dp"
+        android:layout_height="532dp"
+        android:visibility="visible"
+        tools:layout_editor_absoluteX="-8dp"
+        tools:layout_editor_absoluteY="199dp" />
+
+
 
 </androidx.constraintlayout.widget.ConstraintLayout>

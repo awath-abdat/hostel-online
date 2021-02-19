@@ -22,6 +22,8 @@ import com.google.android.gms.auth.api.signin.GoogleSignInClient;
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
 import com.google.android.gms.common.api.ApiException;
 import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthCredential;
 import com.google.firebase.auth.AuthResult;
@@ -44,40 +46,42 @@ public class MainActivity extends AppCompatActivity
   private EditText etSignInPassword;
   GoogleSignInClient googleSignInClient;
   @Override
-  protected void onCreate(Bundle savedInstanceState)
-  {
+  protected void onCreate(Bundle savedInstanceState)  {
+    super.onCreate(savedInstanceState);
+    setContentView(R.layout.activity_main);
+
+    GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
+            .requestIdToken("921715852424-t4ii2on8enqmp4f7hnq430soq9ksg9pi.apps.googleusercontent.com")
+            .requestEmail()
+            .build();
+    mainFirebaseAuth = FirebaseAuth.getInstance();
+
+    googleSignInClient =  GoogleSignIn.getClient(this, gso);
+    etSignInEmail = (EditText) findViewById(R.id.sign_in_email);
+    etSignInPassword = (EditText) findViewById(R.id.sign_in_password);
     if(hostelOnlineUser != null && hostelOnlineUser.userId != null)
     {
       chooseIntentForUser();
     }
-    mainFirebaseAuth = FirebaseAuth.getInstance();
-    super.onCreate(savedInstanceState);
-    GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN).requestIdToken("921715852424-t4ii2on8enqmp4f7hnq430soq9ksg9pi.apps.googleusercontent.com").requestEmail().build();
-    googleSignInClient =  GoogleSignIn.getClient(this, gso);
-    setContentView(R.layout.activity_main);
-    etSignInEmail = (EditText) findViewById(R.id.sign_in_email);
-    etSignInPassword = (EditText) findViewById(R.id.sign_in_password);
+   
     Button bSignInButton = findViewById(R.id.sign_in_button);
-    bSignInButton.setOnClickListener(new View.OnClickListener(){
+    bSignInButton.setOnClickListener(new View.OnClickListener() {
       @Override
-      public void onClick(View v)
-      {
+      public void onClick(View v) {
         mainFirebaseAuth.signInWithEmailAndPassword(etSignInEmail.getText().toString(), etSignInPassword.getText().toString()).addOnCompleteListener(MainActivity.this, new OnCompleteListener<AuthResult>()
         {
-          @Override
-          public void onComplete(@NonNull Task<AuthResult> task)
-          {
-            hostelOnlineUser = new HostelOnlineUser(getApplicationContext());
-            hostelOnlineUser.setOnFinishListener(new OnFinishListener(){
-              @Override
-              public void onFinish()
-              {
-                chooseIntentForUser();
-              }
-            });
-          }
+           @Override
+        public void onComplete(@NonNull Task<AuthResult> task) {
+        hostelOnlineUser = new HostelOnlineUser(getApplicationContext());
+       hostelOnlineUser.setOnFinishListener(new OnFinishListener(){
+         @Override
+          public void onFinish()
+        {
+          chooseIntentForUser();
+        }
         });
-      }
+        }
+        }); }
     });
 
     Button bSignInWithGoogle = findViewById(R.id.sign_in_with_google);
@@ -98,6 +102,7 @@ public class MainActivity extends AppCompatActivity
       public void onComplete(@NonNull Task<AuthResult> task) {
         if(task.isSuccessful())
         {
+
           hostelOnlineUser = new HostelOnlineUser(getApplicationContext());
           hostelOnlineUser.setOnFinishListener(new OnFinishListener(){
             @Override
