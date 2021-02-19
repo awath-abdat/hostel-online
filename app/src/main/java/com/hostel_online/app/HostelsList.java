@@ -2,14 +2,22 @@ package com.hostel_online.app;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.content.res.ResourcesCompat;
 import androidx.recyclerview.widget.RecyclerView;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.Gravity;
+import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewGroup;
+import android.widget.FrameLayout;
 import android.widget.ImageView;
 
+import com.google.android.material.bottomnavigation.BottomNavigationView;
+import com.google.firebase.firestore.CollectionReference;
+import com.google.firebase.firestore.FirebaseFirestore;
 import com.mapbox.api.directions.v5.DirectionsCriteria;
 import com.mapbox.api.directions.v5.MapboxDirections;
 import com.mapbox.api.directions.v5.models.DirectionsResponse;
@@ -45,17 +53,36 @@ import static com.mapbox.mapboxsdk.style.layers.PropertyFactory.iconOffset;
 
 public class HostelsList extends AppCompatActivity
 {
-  private final Hostel[] hostels = {new Hostel("Akamwesi Hostel", (float)4.5, (float)5, (float)4, (float)5, R.mipmap.robert), new Hostel("Douglas Villa", (float)4.5, (float)5, (float)4, (float)5, R.mipmap.rooma)};
   private MapboxDirections client;
   private Point origin;
   private Point destination;
   private MapView hostelMapView;
   private DirectionsRoute currentRoute;
+  private BottomNavigationView bnvFilterIcon;
   private final String ROUTE_SOURCE_ID = "route-source-id";
   private final String ROUTE_LAYER_ID = "route-layer-id";
   private final String ICON_SOURCE_ID = "icon-source-id";
   private final String RED_PIN_ICON_ID = "red-pin-icon-id";
   private final String ICON_LAYER_ID = "icon-layer-id";
+  public final static int RC_FILTER_CONTROLS = 60;
+
+
+  @Override
+  public void onActivityResult(int requestCode, int resultCode, Intent data)
+  {
+    super.onActivityResult(requestCode, resultCode, data);
+    if(requestCode == RC_FILTER_CONTROLS && resultCode == RESULT_OK)
+    {
+      FirebaseFirestore db = FirebaseFirestore.getInstance();
+      String roomType = data.getStringExtra("RoomType");
+      if(roomType != null)
+      {
+        CollectionReference cf = db.collection("Hostels");
+      }
+
+    }
+  }
+
   @Override
   protected void onCreate(Bundle savedInstanceState)
   {
@@ -64,6 +91,54 @@ public class HostelsList extends AppCompatActivity
     setContentView(R.layout.activity_hostels_list);
     hostelMapView = findViewById(R.id.hostel_map_view);
     hostelMapView.onCreate(savedInstanceState);
+    bnvFilterIcon = findViewById(R.id.filter_icons);
+    bnvFilterIcon.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener()
+    {
+      @Override
+      public boolean onNavigationItemSelected(@NonNull MenuItem item)
+      {
+        switch(item.getItemId())
+        {
+          case R.id.room_type:
+          {
+            Intent sendDialogIntent = new Intent(getApplicationContext(), Dialog.class);
+            sendDialogIntent.putExtra("RequestCode", RC_FILTER_CONTROLS);
+            sendDialogIntent.putExtra("Filter", "RoomType");
+            startActivityForResult(sendDialogIntent, RC_FILTER_CONTROLS);
+          }
+            break;
+          case R.id.course_mate:
+          {
+            Intent sendDialogIntent = new Intent(getApplicationContext(), Dialog.class);
+            sendDialogIntent.putExtra("Filter", "CourseMate");
+            startActivityForResult(sendDialogIntent, RC_FILTER_CONTROLS);
+          }
+            break;
+          case R.id.filter_price:
+          {
+            Intent sendDialogIntent = new Intent(getApplicationContext(), Dialog.class);
+            sendDialogIntent.putExtra("Filter", "FilterPrice");
+            startActivityForResult(sendDialogIntent, RC_FILTER_CONTROLS);
+          }
+            break;
+          case R.id.filter_freedom:
+          {
+            Intent sendDialogIntent = new Intent(getApplicationContext(), Dialog.class);
+            sendDialogIntent.putExtra("Filter", "FilterFreedom");
+            startActivityForResult(sendDialogIntent, RC_FILTER_CONTROLS);
+          }
+            break;
+          case R.id.filter_comfort:
+          {
+            Intent sendDialogIntent = new Intent(getApplicationContext(), Dialog.class);
+            sendDialogIntent.putExtra("Filter", "FilterComfort");
+            startActivityForResult(sendDialogIntent, RC_FILTER_CONTROLS);
+          }
+            break;
+        }
+        return true;
+      }
+    });
     hostelMapView.getMapAsync(new OnMapReadyCallback(){
       @Override
       public void onMapReady(@NonNull final MapboxMap mapboxMap)
@@ -98,8 +173,8 @@ public class HostelsList extends AppCompatActivity
     LineLayer routeLayer = new LineLayer(ROUTE_LAYER_ID, ROUTE_SOURCE_ID);
     routeLayer.setProperties(PropertyFactory.lineCap(Property.LINE_CAP_ROUND), PropertyFactory.lineJoin(Property.LINE_JOIN_ROUND), PropertyFactory.lineWidth(5f), PropertyFactory.lineColor(Color.parseColor("#008888")));
     loadedMapStyle.addLayer(routeLayer);
-    loadedMapStyle.addImage(RED_PIN_ICON_ID, BitmapUtils.getBitmapFromDrawable(getResources().getDrawable(R.drawable.arrow_down)));
-    loadedMapStyle.addLayer(new SymbolLayer(ICON_LAYER_ID, ICON_SOURCE_ID).withProperties(iconImage(RED_PIN_ICON_ID), iconIgnorePlacement(true), iconAllowOverlap(true), iconOffset(new Float[]{0f, -9f})));
+    loadedMapStyle.addImage(RED_PIN_ICON_ID, ResourcesCompat.getDrawable(getResources(), R.drawable.red_marker, getTheme()));
+    loadedMapStyle.addLayer(new SymbolLayer(ICON_LAYER_ID, ICON_SOURCE_ID).withProperties(iconImage(RED_PIN_ICON_ID), iconIgnorePlacement(true), iconAllowOverlap(true), iconOffset(new Float[]{0f, 0f})));
   }
 
   private void getRoute(MapboxMap mapboxMap, Point origin, Point destination)
@@ -110,10 +185,10 @@ public class HostelsList extends AppCompatActivity
       @Override public void onResponse(Call<DirectionsResponse> call, Response<DirectionsResponse> response) {
 
         if (response.body() == null) {
-          Log.e("TAG", "No routes found, make sure you set the right user and access token.");
+          Timber.e("No routes found, make sure you set the right user and access token.");
           return;
         } else if (response.body().routes().size() < 1) {
-          Log.e("TAG", "No routes found");
+          Timber.e("No routes found");
           return;
         }
         currentRoute = response.body().routes().get(0);
@@ -134,7 +209,7 @@ public class HostelsList extends AppCompatActivity
       }
       @EverythingIsNonNull
       @Override public void onFailure(Call<DirectionsResponse> call, Throwable throwable) {
-        Log.e("TAG", "Error: " + throwable.getMessage());
+        Timber.e("Error: %s", throwable.getMessage());
       }
     });
   }

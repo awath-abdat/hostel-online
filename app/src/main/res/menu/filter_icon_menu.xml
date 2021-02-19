@@ -14,7 +14,7 @@
         android:icon="@drawable/price"
         android:title="@string/Price" />
     <item
-        android:id="@+id/fiter_freedom"
+        android:id="@+id/filter_freedom"
         android:icon="@drawable/lion"
         android:title="@string/freedom" />
     <item

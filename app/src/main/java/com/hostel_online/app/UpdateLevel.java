@@ -13,6 +13,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
+import android.widget.Toast;
+
 import java.util.HashMap;
 import java.util.Map;
 
@@ -66,7 +68,7 @@ public class UpdateLevel extends Fragment
         level.put("Label", label);
         int i = 1;
         String roomLabelToChange = previousLabel + " - 01";
-        while(EditOrAddHostel.hostelRooms.get(roomLabelToChange) != null)
+        while(EditOrAddHostel.hostelRooms != null && EditOrAddHostel.hostelRooms.get(roomLabelToChange) != null)
         {
           EditOrAddHostel.hostelRooms.remove(roomLabelToChange);
           i++;
@@ -89,22 +91,27 @@ public class UpdateLevel extends Fragment
           n = 2;
         level.put("NumberOfRooms", n);
         String levelLabel = (String)level.get("Label");
-        int i;
-        for(i = 1; i <= n; i++) {
-          Map<String, Object> rooms = new HashMap<>();
-          String roomNumber = (i < 10 ? ("0".concat(String.valueOf(i))) : String.valueOf(i));
-          rooms.put("RoomNumber", roomNumber);
-          rooms.put("LevelLabel", levelLabel);
-          EditOrAddHostel.hostelRooms.put(levelLabel.concat(" - ").concat(roomNumber), rooms);
-        }
-        String excessRoomLabel = levelLabel + " - " + (i < 10 ? ("0".concat(String.valueOf(i))) : String.valueOf(i));
-        while(EditOrAddHostel.hostelRooms.get(excessRoomLabel) != null)
+        if(levelLabel != null)
         {
-          EditOrAddHostel.hostelRooms.remove(excessRoomLabel);
-          i++;
-          excessRoomLabel = levelLabel + " - " + (i < 10 ? ("0".concat(String.valueOf(i))) : String.valueOf(i));
+          int i;
+          for(i = 1; i <= n; i++) {
+            Map<String, Object> rooms = new HashMap<>();
+            String roomNumber = (i < 10 ? ("0".concat(String.valueOf(i))) : String.valueOf(i));
+            rooms.put("RoomNumber", roomNumber);
+            rooms.put("LevelLabel", levelLabel);
+            EditOrAddHostel.hostelRooms.put(levelLabel.concat(" - ").concat(roomNumber), rooms);
+          }
+          String excessRoomLabel = levelLabel + " - " + (i < 10 ? ("0".concat(String.valueOf(i))) : String.valueOf(i));
+          while(EditOrAddHostel.hostelRooms != null && EditOrAddHostel.hostelRooms.get(excessRoomLabel) != null)
+          {
+            EditOrAddHostel.hostelRooms.remove(excessRoomLabel);
+            i++;
+            excessRoomLabel = levelLabel + " - " + (i < 10 ? ("0".concat(String.valueOf(i))) : String.valueOf(i));
+          }
+          updateLevelGridView.setAdapter(new RoomGridAdapter((String)level.get("Label"), n));
+        }else{
+          Toast.makeText(getActivity(), "Give a prefix for the labels of the rooms on this level.", Toast.LENGTH_LONG).show();
         }
-        updateLevelGridView.setAdapter(new RoomGridAdapter((String)level.get("Label"), n));
         EditOrAddHostel.hostelLevels.put("Level " + position, level);
         Log.w("This Room", EditOrAddHostel.hostelRooms.toString());
       }
@@ -114,7 +121,7 @@ public class UpdateLevel extends Fragment
     ViewGroup.LayoutParams params = updateLevelGridView.getLayoutParams();
     int numberOfRooms;
     String levelLabel;
-    if(EditOrAddHostel.hostelLevels != null && EditOrAddHostel.hostelLevels.get("Level " + position) != null && EditOrAddHostel.hostelLevels.get("Level " + position).get("NumberOfRooms") != null)
+    if(EditOrAddHostel.hostelLevels != null && EditOrAddHostel.hostelLevels.get("Level " + position) != null && EditOrAddHostel.hostelLevels.get("Level " + position) != null && EditOrAddHostel.hostelLevels.get("Level " + position).get("NumberOfRooms") != null)
     {
       levelLabel = (String)EditOrAddHostel.hostelLevels.get("Level " + position).get("Label");
       numberOfRooms = (int)EditOrAddHostel.hostelLevels.get("Level " + position).get("NumberOfRooms");

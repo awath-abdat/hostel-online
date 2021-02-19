@@ -92,14 +92,14 @@
 
         <ImageView
             android:id="@+id/update_image_view"
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="200dp"
             android:contentDescription="@string/app_name"
             android:scaleType="centerCrop"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            app:srcCompat="@mipmap/robert" />
+            app:srcCompat="@mipmap/roomb" />
 
         <ImageView
             android:id="@+id/update_capture_warning"
@@ -219,6 +219,7 @@
                 android:id="@+id/update_single_room_container"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:visibility="gone"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent">
@@ -310,7 +311,6 @@
                 android:id="@+id/update_double_room_container"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:visibility="gone"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent">
@@ -364,7 +364,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
                         android:background="@android:color/transparent"
-                        android:hint="@string/single_room_booking_fee"
+                        android:hint="@string/double_room_booking_fee"
                         android:inputType="number"
                         android:paddingStart="25dp"
                         android:paddingTop="5dp"
@@ -391,7 +391,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
                         android:background="@android:color/transparent"
-                        android:hint="@string/single_room_price"
+                        android:hint="@string/double_room_price"
                         android:inputType="number"
                         android:paddingStart="25dp"
                         android:paddingTop="5dp"
@@ -458,7 +458,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
                         android:background="@android:color/transparent"
-                        android:hint="@string/single_room_booking_fee"
+                        android:hint="@string/tripple_room_booking_fee"
                         android:inputType="number"
                         android:paddingStart="25dp"
                         android:paddingTop="5dp"
@@ -485,7 +485,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
                         android:background="@android:color/transparent"
-                        android:hint="@string/single_room_price"
+                        android:hint="@string/tripple_room_price"
                         android:inputType="number"
                         android:paddingStart="25dp"
                         android:paddingTop="5dp"

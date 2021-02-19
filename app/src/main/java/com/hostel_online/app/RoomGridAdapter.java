@@ -3,12 +3,7 @@ package com.hostel_online.app;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
-import android.widget.RatingBar;
 import android.widget.TextView;
-
-import java.util.Map;
-
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -28,7 +23,7 @@ public class RoomGridAdapter extends RecyclerView.Adapter<RoomGridAdapter.Hostel
     public HostelViewHolder(View skeletonView)
     {
       super(skeletonView);
-      tvUpdateLevelGridButtonText = (TextView) skeletonView.findViewById(R.id.update_level_grid_button_text);
+      tvUpdateLevelGridButtonText = skeletonView.findViewById(R.id.update_level_grid_button_text);
     }
     TextView getHostelNameTextView()
     {
@@ -53,6 +48,36 @@ public class RoomGridAdapter extends RecyclerView.Adapter<RoomGridAdapter.Hostel
   {
     String roomNumber = (position + 1) < 10 ? ("0" + (position + 1)) : String.valueOf(position + 1);
     skeletonViewHolder.getHostelNameTextView().setText(roomNumber);
+    if(EditOrAddHostel.hostelRooms != null && EditOrAddHostel.hostelRooms.get(levelLabel + " - " + roomNumber) != null && EditOrAddHostel.hostelRooms.get(levelLabel + " - " + roomNumber).get("RoomType") != null)
+    {
+      switch((String)EditOrAddHostel.hostelRooms.get(levelLabel + " - " + roomNumber).get("RoomType"))
+      {
+        case "Single":
+        {
+          skeletonViewHolder.getHostelNameTextView().setBackgroundResource(R.drawable.red_button_background);
+          skeletonViewHolder.getHostelNameTextView().setTextColor(0xFFFFFFFF);
+        }
+          break;
+        case "Double":
+        {
+          skeletonViewHolder.getHostelNameTextView().setBackgroundResource(R.drawable.buttonbackground);
+          skeletonViewHolder.getHostelNameTextView().setTextColor(0xFFFFFFFF);
+        }
+          break;
+        case "Tripple":
+        {
+          skeletonViewHolder.getHostelNameTextView().setBackgroundResource(R.drawable.green_button_background);
+          skeletonViewHolder.getHostelNameTextView().setTextColor(0xFFFFFFFF);
+        }
+          break;
+        default:
+        {
+          skeletonViewHolder.getHostelNameTextView().setBackgroundResource(R.drawable.field_background);
+          skeletonViewHolder.getHostelNameTextView().setTextColor(0xFF707070);
+        }
+        break;
+      }
+    }
     skeletonViewHolder.getHostelNameTextView().setOnClickListener(new View.OnClickListener()
     {
       @Override
@@ -62,40 +87,52 @@ public class RoomGridAdapter extends RecyclerView.Adapter<RoomGridAdapter.Hostel
         {
           case "Single":
           {
-            if(EditOrAddHostel.hostelRooms.get(levelLabel + " - " + roomNumber).get("RoomType") != null && EditOrAddHostel.hostelRooms.get(levelLabel + " - " + roomNumber).get("RoomType").equals("Single"))
+            if(EditOrAddHostel.hostelRooms != null && EditOrAddHostel.hostelRooms.get(levelLabel + " - " + roomNumber) != null && EditOrAddHostel.hostelRooms.get(levelLabel + " - " + roomNumber).get("RoomType") != null && EditOrAddHostel.hostelRooms.get(levelLabel + " - " + roomNumber).get("RoomType").equals("Single"))
             {
               v.setBackgroundResource(R.drawable.field_background);
               ((TextView)v).setTextColor(0xFF707070);
+              EditOrAddHostel.hostelRooms.get(levelLabel + " - " + roomNumber).remove("RoomType");
             }else{
-              EditOrAddHostel.hostelRooms.get(levelLabel + " - " + roomNumber).put("RoomType", "Single");
-              v.setBackgroundResource(R.drawable.red_button_background);
-              ((TextView)v).setTextColor(0xFFFFFFFF);
+              if(EditOrAddHostel.hostelRooms != null && EditOrAddHostel.hostelRooms.get(levelLabel + " - " + roomNumber) != null)
+              {
+                EditOrAddHostel.hostelRooms.get(levelLabel + " - " + roomNumber).put("RoomType", "Single");
+                v.setBackgroundResource(R.drawable.red_button_background);
+                ((TextView)v).setTextColor(0xFFFFFFFF);
+              }
             }
           }
           break;
           case "Double":
           {
-            if(EditOrAddHostel.hostelRooms.get(levelLabel + " - " + roomNumber).get("RoomType") != null && EditOrAddHostel.hostelRooms.get(levelLabel + " - " + roomNumber).get("RoomType").equals("Double"))
+            if(EditOrAddHostel.hostelRooms != null && EditOrAddHostel.hostelRooms.get(levelLabel + " - " + roomNumber) != null && EditOrAddHostel.hostelRooms.get(levelLabel + " - " + roomNumber).get("RoomType") != null && EditOrAddHostel.hostelRooms.get(levelLabel + " - " + roomNumber).get("RoomType").equals("Double"))
             {
               v.setBackgroundResource(R.drawable.field_background);
               ((TextView)v).setTextColor(0xFF707070);
+              EditOrAddHostel.hostelRooms.get(levelLabel + " - " + roomNumber).remove("RoomType");
             }else{
-              EditOrAddHostel.hostelRooms.get(levelLabel + " - " + roomNumber).put("RoomType", "Double");
-              v.setBackgroundColor(R.drawable.buttonbackground);
-              ((TextView)v).setTextColor(0xFFFFFFFF);
+              if(EditOrAddHostel.hostelRooms != null && EditOrAddHostel.hostelRooms.get(levelLabel + " - " + roomNumber) != null)
+              {
+                EditOrAddHostel.hostelRooms.get(levelLabel + " - " + roomNumber).put("RoomType", "Double");
+                v.setBackgroundResource(R.drawable.buttonbackground);
+                ((TextView)v).setTextColor(0xFFFFFFFF);
+              }
             }
           }
           break;
           case "Tripple":
           {
-            if(EditOrAddHostel.hostelRooms.get(levelLabel + " - " + roomNumber).get("RoomType") != null && EditOrAddHostel.hostelRooms.get(levelLabel + " - " + roomNumber).get("RoomType").equals("Tripple"))
+            if(EditOrAddHostel.hostelRooms != null && EditOrAddHostel.hostelRooms.get(levelLabel + " - " + roomNumber) != null && EditOrAddHostel.hostelRooms.get(levelLabel + " - " + roomNumber).get("RoomType") != null && EditOrAddHostel.hostelRooms.get(levelLabel + " - " + roomNumber).get("RoomType").equals("Tripple"))
             {
               v.setBackgroundResource(R.drawable.field_background);
               ((TextView)v).setTextColor(0xFF707070);
+              EditOrAddHostel.hostelRooms.get(levelLabel + " - " + roomNumber).remove("RoomType");
             }else{
-              EditOrAddHostel.hostelRooms.get(levelLabel + " - " + roomNumber).put("RoomType", "Tripple");
-              v.setBackgroundColor(R.drawable.green_button_background);
-              ((TextView)v).setTextColor(0xFFFFFFFF);
+              if(EditOrAddHostel.hostelRooms != null && EditOrAddHostel.hostelRooms.get(levelLabel + " - " + roomNumber) != null)
+              {
+                EditOrAddHostel.hostelRooms.get(levelLabel + " - " + roomNumber).put("RoomType", "Tripple");
+                v.setBackgroundResource(R.drawable.green_button_background);
+                ((TextView)v).setTextColor(0xFFFFFFFF);
+              }
             }
           }
           break;

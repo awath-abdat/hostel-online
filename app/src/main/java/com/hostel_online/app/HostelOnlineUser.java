@@ -83,7 +83,8 @@ public class HostelOnlineUser
                 intent.putExtra("SignInProvider", "Google");
                 context.startActivity(intent);
               }else{
-                onFinishListener.onFinish();
+                if(onFinishListener != null)
+                  onFinishListener.onFinish();
               }
             }else{
               if(!doc.exists()) {

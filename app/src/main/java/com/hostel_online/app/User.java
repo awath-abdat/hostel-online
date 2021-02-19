@@ -4,6 +4,7 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.fragment.app.FragmentTransaction;
+import timber.log.Timber;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -38,9 +39,9 @@ public class User extends AppCompatActivity
     transaction.replace(R.id.fragment_container, new user_home());
     transaction.addToBackStack(null);
     transaction.commit();
-    if(MainActivity.hostelOnlineUser.userRole != null)
-      switch(MainActivity.hostelOnlineUser.userRole)
-      {
+    if(MainActivity.hostelOnlineUser != null && MainActivity.hostelOnlineUser.userRole != null)
+    {
+      switch (MainActivity.hostelOnlineUser.userRole) {
         case "Admin":
           bottomAppBar.replaceMenu(R.menu.user_bottom_nav_admin_menu);
           break;
@@ -51,8 +52,18 @@ public class User extends AppCompatActivity
           bottomAppBar.replaceMenu(R.menu.user_bottom_nav_student_menu);
           break;
       }
-    else
-      Log.w("userRole", "Is Null");
+    }
+    else{
+      MainActivity.hostelOnlineUser = new HostelOnlineUser(getApplicationContext());
+      MainActivity.hostelOnlineUser.setOnFinishListener(new OnFinishListener(){
+        @Override
+        public void onFinish()
+        {
+          chooseIntentForUser();
+        }
+      });
+      Timber.tag("userRole").w("Is Null");
+    }
     bottomAppBar.setNavigationOnClickListener(new View.OnClickListener(){
       @Override
       public void onClick(View v)
@@ -93,5 +104,25 @@ public class User extends AppCompatActivity
         return false;
       }
     });
+  }
+
+  public void chooseIntentForUser()
+  {
+    if(MainActivity.hostelOnlineUser == null)
+      MainActivity.hostelOnlineUser = new HostelOnlineUser(getApplicationContext());
+    if(MainActivity.hostelOnlineUser.userRole != null && (MainActivity.hostelOnlineUser.userRoomLabel == null || MainActivity.hostelOnlineUser.userHostelName == null || MainActivity.hostelOnlineUser.userRoomLabel.length() == 0 || MainActivity.hostelOnlineUser.userHostelName.length() == 0))
+    {
+      if(MainActivity.hostelOnlineUser.userRole.equals("Student"))
+      {
+        Intent sendHostelsListIntent = new Intent(getApplicationContext(), HostelsList.class);
+        startActivity(sendHostelsListIntent);
+      }else{
+        Intent sendUserIntent = new Intent(getApplicationContext(), User.class);
+        startActivity(sendUserIntent);
+      }
+    }else{
+      Intent intent = new Intent(getApplicationContext(), User.class);
+      startActivity(intent);
+    }
   }
 }

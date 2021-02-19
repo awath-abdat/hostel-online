@@ -33,6 +33,8 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseUser;
+
+import java.lang.ref.WeakReference;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -50,19 +52,20 @@ public class SignUp extends AppCompatActivity
   Spinner campusSpinner;
   ImageView signUpProfileImage;
   Uri selectedImage;
-  public static class UploadPhotoTask extends AsyncTask<String, Integer, String>{
+  private static class UploadPhotoTask extends AsyncTask<String, Integer, String>{
     Map uploadResult;
     FirebaseUser user;
-    Context context;
+    private final WeakReference<Context> contextRef;
     public UploadPhotoTask(Context context, FirebaseUser user)
     {
-      this.context = context;
+      this.contextRef = new WeakReference<>(context);
       this.user = user;
     }
 
     @Override
     protected String doInBackground(String... filepath)
     {
+      Context context = contextRef.get();
       try {
         Cloudinary cloudinary = new Cloudinary(ObjectUtils.asMap("cloude_name", "dynyjan4a", "api_key", context.getResources().getString(R.string.cloudinary_key), "api_secret", context.getResources().getString(R.string.cloudinary_secret)));
         uploadResult = cloudinary.uploader().upload(filepath[0], ObjectUtils.asMap("cloud_name", "dynyjan4a", "folder", "Users", "public_id", MainActivity.hostelOnlineUser.userId));
@@ -75,6 +78,7 @@ public class SignUp extends AppCompatActivity
     @Override
     public void onPostExecute(String result)
     {
+      Context context = contextRef.get();
       UserProfileChangeRequest profileUpdates;
       profileUpdates = new UserProfileChangeRequest.Builder().setPhotoUri(Uri.parse((String)uploadResult.get("secure_url"))).build();
       user.updateProfile(profileUpdates).addOnCompleteListener(new OnCompleteListener<Void>(){
@@ -151,7 +155,7 @@ public class SignUp extends AppCompatActivity
         Intent pickPhoto = new Intent(Intent.ACTION_PICK, android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
         startActivityForResult(pickPhoto, 1);
       }else{
-        Toast.makeText(SignUp.this, "permission denied", Toast.LENGTH_SHORT).show();
+        Toast.makeText(SignUp.this, "Permission Denied", Toast.LENGTH_SHORT).show();
       }
     }
   }
