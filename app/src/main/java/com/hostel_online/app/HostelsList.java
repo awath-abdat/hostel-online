@@ -127,8 +127,9 @@ public class HostelsList extends AppCompatActivity
                 int added = 0, j = 1;
                 while(hostelRooms.get(roomLabel) != null)
                 {
-                  if(hostelRooms != null)
+                  if(roomType != null && hostelRooms.get(roomLabel).get("RoomType").equals(roomType))
                   {
+                    tempHostel.put("Points", 1);
                     hostels.add(tempHostel);
                     added = 1;
                     break;
