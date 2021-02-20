@@ -1,109 +1,191 @@
 package com.hostel_online.app;
 
-import android.content.Context;
-import android.content.Intent;
-import android.net.Uri;
-import android.util.Log;
-import android.widget.Toast;
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.Task;
-import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.auth.UserInfo;
-import com.google.firebase.firestore.DocumentReference;
-import com.google.firebase.firestore.DocumentSnapshot;
-import com.google.firebase.firestore.FirebaseFirestore;
-import androidx.annotation.NonNull;
+import android.os.Parcel;
+import android.os.Parcelable;
 
-public class HostelOnlineUser
+public class HostelOnlineUser implements Parcelable
 {
-  private OnFinishListener onFinishListener;
-  public String userId;
-  public String userDisplayName;
-  public String userFirstName;
-  public String userLastName;
-  public String userEmail;
-  public String userPhoneNumber;
-  public String userCourse;
-  public String userGender;
-  public String userHostelName;
-  public String userRoomLabel;
-  public String userCampus;
-  public String userRole;
-  public String userPhotoUrl;
-  public HostelOnlineUser(Context context)
+  private String userId;
+  private String userFirstName;
+  private String userLastName;
+  private String userEmail;
+  private String userPhoneNumber;
+  private String userCourse;
+  private String userGender;
+  private String userHostelId;
+  private String userRoomLabel;
+  private String userCampus;
+  private String userRole;
+  private String userPhotoUrl;
+
+  public HostelOnlineUser() { }
+
+  public HostelOnlineUser(Parcel in)
   {
-    FirebaseAuth auth = FirebaseAuth.getInstance();
-    FirebaseUser user = auth.getCurrentUser();
-    FirebaseFirestore db = FirebaseFirestore.getInstance();
-    if(user != null){
-      DocumentReference df = db.collection("Users").document(user.getUid());
-      df.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>()
-      {
-        @Override
-        public void onComplete(@NonNull Task<DocumentSnapshot> task)
-        {
-          if (task.isSuccessful()) {
-            DocumentSnapshot doc = task.getResult();
-            if (doc != null && doc.exists()) {
-              userId = user.getUid();
-              userDisplayName = user.getDisplayName();
-              userFirstName = (String) doc.get("FirstName");
-              userLastName = (String) doc.get("LastName");
-              userEmail = (String) doc.get("UserEmail");
-              userCourse = (String) doc.get("Course");
-              userCampus = (String) doc.get("Campus");
-              userGender = (String) doc.get("Gender");
-              userPhoneNumber = (String) doc.get("PhoneNumber");
-              userRole = (String) doc.get("Role");
-              userRoomLabel = (String) doc.get("RoomLabel");
-              userHostelName = (String) doc.get("Hostel");
-              Uri photoUri = user.getPhotoUrl();
-              if (photoUri != null) {
-                userPhotoUrl = photoUri.toString();
-              }
-              if(userFirstName == null || userFirstName.length() == 0)
-              {
-                userId = user.getUid();
-                for(UserInfo profile : user.getProviderData())
-                {
-                  userDisplayName = profile.getDisplayName();
-                  if(userDisplayName != null)
-                  {
-                    userFirstName = userDisplayName.split(" ")[0];
-                    userLastName = userDisplayName.split(" ")[1];
-                  }
-                  userEmail = profile.getEmail();
-                  Uri photo = profile.getPhotoUrl();
-                  if(photo != null) {
-                    userPhotoUrl = photo.toString();
-                  }
-                }
-                Intent intent = new Intent(context, SignUp.class);
-                intent.putExtra("SignInProvider", "Google");
-                context.startActivity(intent);
-              }else{
-                if(onFinishListener != null)
-                  onFinishListener.onFinish();
-              }
-            }else{
-              if(!doc.exists()) {
-                Intent intent = new Intent(context, SignUp.class);
-                context.startActivity(intent);
-              }
-            }
-          } else {
-            Toast.makeText(context, "Failed to retrieve document.", Toast.LENGTH_LONG).show();
-          }
-        }
-      });
-    }else{
-      Log.w("Creating User: ", "User is null in creating new HostelOnlineUser");
-    }
+    String[] data = new String[12];
+    in.readStringArray(data);
+    userId = data[0];
+    userPhotoUrl = data[1];
+    userFirstName = data[2];
+    userLastName = data[3];
+    userEmail = data[4];
+    userPhoneNumber = data[5];
+    userCourse = data[6];
+    userGender = data[7];
+    userCampus = data[8];
+    userHostelId = data[9];
+    userRoomLabel = data[10];
+    userRole = data[11];
   }
 
-  public void setOnFinishListener(OnFinishListener e)
+  public int describeContents()
   {
-    this.onFinishListener = e;
+    return 0;
   }
+
+  public void writeToParcel(Parcel out, int flags) {
+    String[] data = {userId, userPhotoUrl, userFirstName, userLastName, userEmail, userPhoneNumber, userCourse, userGender, userCampus, userHostelId, userRoomLabel, userRole};
+    out.writeStringArray(data);
+  }
+
+  public static final Parcelable.Creator<HostelOnlineUser> CREATOR = new Parcelable.Creator<HostelOnlineUser>() {
+    public HostelOnlineUser createFromParcel(Parcel in) {
+      return new HostelOnlineUser(in);
+    }
+
+    public HostelOnlineUser[] newArray(int size) {
+      return new HostelOnlineUser[size];
+    }
+  };
+
+  public void setUserPhotoUrl(String userPhotourl)
+  {
+    this.userPhotoUrl = userPhotoUrl;
+  }
+
+  public void setUserRoomLabel(String userRoomLabel)
+  {
+    this.userRoomLabel = userRoomLabel;
+  }
+
+  public void setUserCampus(String userCampus)
+  {
+    this.userCampus = userCampus;
+  }
+
+  public void setUserCourse(String userCourse)
+  {
+    this.userCourse = userCourse;
+  }
+
+  public void setUserHostelId(String userHostelId)
+  {
+    this.userHostelId = userHostelId;
+  }
+
+  public void setUserGender(String userGender)
+  {
+    this.userGender = userGender;
+  }
+
+  public void setUserPhoneNumber(String userPhoneNumber)
+  {
+    this.userPhoneNumber = userPhoneNumber;
+  }
+
+  public void setUserRole(String userRole)
+  {
+    this.userRole = userRole;
+  }
+
+  public void setUserEmail(String userEmail)
+  {
+    this.userEmail = userEmail;
+  }
+
+  public void setUserLastName(String userLastName)
+  {
+    this.userLastName = userLastName;
+  }
+
+  public void setUserFirstName(String userFirstName)
+  {
+    this.userFirstName = userFirstName;
+  }
+
+  public void setUserId(String userId)
+  {
+    this.userId = userId;
+  }
+
+  public String getUserPhotoUrl()
+  {
+    return this.userPhotoUrl;
+  }
+
+  public String getUserRoomLabel()
+  {
+    return this.userRoomLabel;
+  }
+
+  public String getUserDisplayName()
+  {
+    return this.userFirstName + " " + this.getUserLastName();
+  }
+
+  public String getUserCampus()
+  {
+    return this.userCampus;
+  }
+
+  public String getUserCourse()
+  {
+    return this.userCourse;
+  }
+
+  public String getUserHostelId()
+  {
+    return this.userHostelId;
+  }
+
+  public String getUserEmail()
+  {
+    return this.userEmail;
+  }
+
+  public String getUserGender()
+  {
+    return this.userGender;
+  }
+
+  public String getUserPhoneNumber()
+  {
+    return this.userPhoneNumber;
+  }
+
+  public String getUserRole()
+  {
+    return this.userRole;
+  }
+
+  public String setUserEmail()
+  {
+    return this.userEmail;
+  }
+
+  public String getUserLastName()
+  {
+    return this.userLastName;
+  }
+
+  public String getUserFirstName()
+  {
+    return this.userFirstName;
+  }
+
+  public String getUserId()
+  {
+    return this.userId;
+  }
+
 }

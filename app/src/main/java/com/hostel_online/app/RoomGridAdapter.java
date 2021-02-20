@@ -48,9 +48,9 @@ public class RoomGridAdapter extends RecyclerView.Adapter<RoomGridAdapter.Hostel
   {
     String roomNumber = (position + 1) < 10 ? ("0" + (position + 1)) : String.valueOf(position + 1);
     skeletonViewHolder.getHostelNameTextView().setText(roomNumber);
-    if(EditOrAddHostel.hostelRooms != null && EditOrAddHostel.hostelRooms.get(levelLabel + " - " + roomNumber) != null && EditOrAddHostel.hostelRooms.get(levelLabel + " - " + roomNumber).get("RoomType") != null)
+    if(EditOrAddHostel.hostelRooms != null && EditOrAddHostel.hostelRooms.get(levelLabel + "-" + roomNumber) != null && EditOrAddHostel.hostelRooms.get(levelLabel + "-" + roomNumber).get("RoomType") != null)
     {
-      switch((String)EditOrAddHostel.hostelRooms.get(levelLabel + " - " + roomNumber).get("RoomType"))
+      switch((String)EditOrAddHostel.hostelRooms.get(levelLabel + "-" + roomNumber).get("RoomType"))
       {
         case "Single":
         {
@@ -87,15 +87,15 @@ public class RoomGridAdapter extends RecyclerView.Adapter<RoomGridAdapter.Hostel
         {
           case "Single":
           {
-            if(EditOrAddHostel.hostelRooms != null && EditOrAddHostel.hostelRooms.get(levelLabel + " - " + roomNumber) != null && EditOrAddHostel.hostelRooms.get(levelLabel + " - " + roomNumber).get("RoomType") != null && EditOrAddHostel.hostelRooms.get(levelLabel + " - " + roomNumber).get("RoomType").equals("Single"))
+            if(EditOrAddHostel.hostelRooms != null && EditOrAddHostel.hostelRooms.get(levelLabel + "-" + roomNumber) != null && EditOrAddHostel.hostelRooms.get(levelLabel + "-" + roomNumber).get("RoomType") != null && EditOrAddHostel.hostelRooms.get(levelLabel + "-" + roomNumber).get("RoomType").equals("Single"))
             {
               v.setBackgroundResource(R.drawable.field_background);
               ((TextView)v).setTextColor(0xFF707070);
-              EditOrAddHostel.hostelRooms.get(levelLabel + " - " + roomNumber).remove("RoomType");
+              EditOrAddHostel.hostelRooms.get(levelLabel + "-" + roomNumber).remove("RoomType");
             }else{
-              if(EditOrAddHostel.hostelRooms != null && EditOrAddHostel.hostelRooms.get(levelLabel + " - " + roomNumber) != null)
+              if(EditOrAddHostel.hostelRooms != null && EditOrAddHostel.hostelRooms.get(levelLabel + "-" + roomNumber) != null)
               {
-                EditOrAddHostel.hostelRooms.get(levelLabel + " - " + roomNumber).put("RoomType", "Single");
+                EditOrAddHostel.hostelRooms.get(levelLabel + "-" + roomNumber).put("RoomType", "Single");
                 v.setBackgroundResource(R.drawable.red_button_background);
                 ((TextView)v).setTextColor(0xFFFFFFFF);
               }
@@ -104,15 +104,15 @@ public class RoomGridAdapter extends RecyclerView.Adapter<RoomGridAdapter.Hostel
           break;
           case "Double":
           {
-            if(EditOrAddHostel.hostelRooms != null && EditOrAddHostel.hostelRooms.get(levelLabel + " - " + roomNumber) != null && EditOrAddHostel.hostelRooms.get(levelLabel + " - " + roomNumber).get("RoomType") != null && EditOrAddHostel.hostelRooms.get(levelLabel + " - " + roomNumber).get("RoomType").equals("Double"))
+            if(EditOrAddHostel.hostelRooms != null && EditOrAddHostel.hostelRooms.get(levelLabel + "-" + roomNumber) != null && EditOrAddHostel.hostelRooms.get(levelLabel + "-" + roomNumber).get("RoomType") != null && EditOrAddHostel.hostelRooms.get(levelLabel + "-" + roomNumber).get("RoomType").equals("Double"))
             {
               v.setBackgroundResource(R.drawable.field_background);
               ((TextView)v).setTextColor(0xFF707070);
-              EditOrAddHostel.hostelRooms.get(levelLabel + " - " + roomNumber).remove("RoomType");
+              EditOrAddHostel.hostelRooms.get(levelLabel + "-" + roomNumber).remove("RoomType");
             }else{
-              if(EditOrAddHostel.hostelRooms != null && EditOrAddHostel.hostelRooms.get(levelLabel + " - " + roomNumber) != null)
+              if(EditOrAddHostel.hostelRooms != null && EditOrAddHostel.hostelRooms.get(levelLabel + "-" + roomNumber) != null)
               {
-                EditOrAddHostel.hostelRooms.get(levelLabel + " - " + roomNumber).put("RoomType", "Double");
+                EditOrAddHostel.hostelRooms.get(levelLabel + "-" + roomNumber).put("RoomType", "Double");
                 v.setBackgroundResource(R.drawable.buttonbackground);
                 ((TextView)v).setTextColor(0xFFFFFFFF);
               }
@@ -121,15 +121,15 @@ public class RoomGridAdapter extends RecyclerView.Adapter<RoomGridAdapter.Hostel
           break;
           case "Tripple":
           {
-            if(EditOrAddHostel.hostelRooms != null && EditOrAddHostel.hostelRooms.get(levelLabel + " - " + roomNumber) != null && EditOrAddHostel.hostelRooms.get(levelLabel + " - " + roomNumber).get("RoomType") != null && EditOrAddHostel.hostelRooms.get(levelLabel + " - " + roomNumber).get("RoomType").equals("Tripple"))
+            if(EditOrAddHostel.hostelRooms != null && EditOrAddHostel.hostelRooms.get(levelLabel + "-" + roomNumber) != null && EditOrAddHostel.hostelRooms.get(levelLabel + "-" + roomNumber).get("RoomType") != null && EditOrAddHostel.hostelRooms.get(levelLabel + "-" + roomNumber).get("RoomType").equals("Tripple"))
             {
               v.setBackgroundResource(R.drawable.field_background);
               ((TextView)v).setTextColor(0xFF707070);
-              EditOrAddHostel.hostelRooms.get(levelLabel + " - " + roomNumber).remove("RoomType");
+              EditOrAddHostel.hostelRooms.get(levelLabel + "-" + roomNumber).remove("RoomType");
             }else{
-              if(EditOrAddHostel.hostelRooms != null && EditOrAddHostel.hostelRooms.get(levelLabel + " - " + roomNumber) != null)
+              if(EditOrAddHostel.hostelRooms != null && EditOrAddHostel.hostelRooms.get(levelLabel + "-" + roomNumber) != null)
               {
-                EditOrAddHostel.hostelRooms.get(levelLabel + " - " + roomNumber).put("RoomType", "Tripple");
+                EditOrAddHostel.hostelRooms.get(levelLabel + "-" + roomNumber).put("RoomType", "Tripple");
                 v.setBackgroundResource(R.drawable.green_button_background);
                 ((TextView)v).setTextColor(0xFFFFFFFF);
               }

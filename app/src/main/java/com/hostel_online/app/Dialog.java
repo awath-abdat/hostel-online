@@ -1,7 +1,6 @@
 package com.hostel_online.app;
 
-import androidx.appcompat.app.AppCompatActivity;
-
+import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
@@ -9,7 +8,7 @@ import android.widget.TextView;
 
 import static com.hostel_online.app.HostelsList.RC_FILTER_CONTROLS;
 
-public class Dialog extends AppCompatActivity
+public class Dialog extends Activity
 {
 
   @Override
@@ -17,7 +16,7 @@ public class Dialog extends AppCompatActivity
   {
     super.onCreate(savedInstanceState);
     Intent receiveDialogIntent = getIntent();
-    int requestCode = Integer.parseInt(receiveDialogIntent.getStringExtra("RequestCode"));
+    int requestCode = receiveDialogIntent.getIntExtra("RequestCode", 0);
     switch(requestCode)
     {
       case RC_FILTER_CONTROLS:

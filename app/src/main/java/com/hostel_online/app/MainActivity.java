@@ -22,8 +22,6 @@ import com.google.android.gms.auth.api.signin.GoogleSignInClient;
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
 import com.google.android.gms.common.api.ApiException;
 import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.OnFailureListener;
-import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthCredential;
 import com.google.firebase.auth.AuthResult;
@@ -46,42 +44,74 @@ public class MainActivity extends AppCompatActivity
   private EditText etSignInPassword;
   GoogleSignInClient googleSignInClient;
   @Override
-  protected void onCreate(Bundle savedInstanceState)  {
-    super.onCreate(savedInstanceState);
-    setContentView(R.layout.activity_main);
-
-    GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
-            .requestIdToken("921715852424-t4ii2on8enqmp4f7hnq430soq9ksg9pi.apps.googleusercontent.com")
-            .requestEmail()
-            .build();
-    mainFirebaseAuth = FirebaseAuth.getInstance();
-
-    googleSignInClient =  GoogleSignIn.getClient(this, gso);
-    etSignInEmail = (EditText) findViewById(R.id.sign_in_email);
-    etSignInPassword = (EditText) findViewById(R.id.sign_in_password);
-    if(hostelOnlineUser != null && hostelOnlineUser.userId != null)
+  protected void onCreate(Bundle savedInstanceState)
+  {
+    if(hostelOnlineUser != null && hostelOnlineUser.getUserId() != null)
     {
       chooseIntentForUser();
     }
-   
+    mainFirebaseAuth = FirebaseAuth.getInstance();
+    super.onCreate(savedInstanceState);
+    GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN).requestIdToken("921715852424-t4ii2on8enqmp4f7hnq430soq9ksg9pi.apps.googleusercontent.com").requestEmail().build();
+    googleSignInClient =  GoogleSignIn.getClient(this, gso);
+    setContentView(R.layout.activity_main);
+    etSignInEmail = (EditText) findViewById(R.id.sign_in_email);
+    etSignInPassword = (EditText) findViewById(R.id.sign_in_password);
     Button bSignInButton = findViewById(R.id.sign_in_button);
-    bSignInButton.setOnClickListener(new View.OnClickListener() {
+    bSignInButton.setOnClickListener(new View.OnClickListener(){
       @Override
-      public void onClick(View v) {
+      public void onClick(View v)
+      {
         mainFirebaseAuth.signInWithEmailAndPassword(etSignInEmail.getText().toString(), etSignInPassword.getText().toString()).addOnCompleteListener(MainActivity.this, new OnCompleteListener<AuthResult>()
         {
-           @Override
-        public void onComplete(@NonNull Task<AuthResult> task) {
-        hostelOnlineUser = new HostelOnlineUser(getApplicationContext());
-       hostelOnlineUser.setOnFinishListener(new OnFinishListener(){
-         @Override
-          public void onFinish()
-        {
-          chooseIntentForUser();
-        }
+          @Override
+          public void onComplete(@NonNull Task<AuthResult> task)
+          {
+            FirebaseFirestore db = FirebaseFirestore.getInstance();
+            FirebaseUser user = mainFirebaseAuth.getCurrentUser();
+            hostelOnlineUser = new HostelOnlineUser();
+            if(user != null)
+            {
+              DocumentReference df = db.collection("Users").document(user.getUid());
+              df.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>()
+              {
+                @Override
+                public void onComplete(@NonNull Task<DocumentSnapshot> task)
+                {
+                  if(task.isSuccessful())
+                  {
+                    DocumentSnapshot doc = task.getResult();
+                    if(doc != null && doc.exists())
+                    {
+                      hostelOnlineUser.setUserId(user.getUid());
+                      hostelOnlineUser.setUserFirstName((String)doc.get("FirstName"));
+                      hostelOnlineUser.setUserLastName((String)doc.get("LastName"));
+                      hostelOnlineUser.setUserEmail((String)doc.get("UserEmail"));
+                      hostelOnlineUser.setUserCourse((String)doc.get("Course"));
+                      hostelOnlineUser.setUserRole((String)doc.get("Role"));
+                      hostelOnlineUser.setUserGender((String)doc.get("Gender"));
+                      hostelOnlineUser.setUserCampus((String)doc.get("Campus"));
+                      hostelOnlineUser.setUserPhoneNumber((String)doc.get("PhoneNumber"));
+                      Uri photoUrl = user.getPhotoUrl();
+                      if(photoUrl != null)
+                        hostelOnlineUser.setUserPhotoUrl(photoUrl.toString());
+                      chooseIntentForUser();
+                    }else{
+                      Intent signUpSendIntent = new Intent(MainActivity.this, SignUp.class);
+                      signUpSendIntent.putExtra("SignInProvider", "Email");
+                      startActivity(signUpSendIntent);
+                    }
+                  }else{
+                    Toast.makeText(MainActivity.this, "Failed to retrieve user information, please try again.", Toast.LENGTH_LONG).show();
+                  }
+                }
+              });
+            }else{
+              Toast.makeText(MainActivity.this, "Sign In failed, if you have no account please sign up.", Toast.LENGTH_LONG).show();
+            }
+          }
         });
-        }
-        }); }
+      }
     });
 
     Button bSignInWithGoogle = findViewById(R.id.sign_in_with_google);
@@ -99,21 +129,59 @@ public class MainActivity extends AppCompatActivity
     AuthCredential credential = GoogleAuthProvider.getCredential(idToken, null);
     mainFirebaseAuth.signInWithCredential(credential).addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
       @Override
-      public void onComplete(@NonNull Task<AuthResult> task) {
-        if(task.isSuccessful())
+      public void onComplete(@NonNull Task<AuthResult> task)
+      {
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
+        FirebaseUser user = mainFirebaseAuth.getCurrentUser();
+        hostelOnlineUser = new HostelOnlineUser();
+        if(user != null)
         {
-
-          hostelOnlineUser = new HostelOnlineUser(getApplicationContext());
-          hostelOnlineUser.setOnFinishListener(new OnFinishListener(){
+          DocumentReference df = db.collection("Users").document(user.getUid());
+          df.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>()
+          {
             @Override
-            public void onFinish()
+            public void onComplete(@NonNull Task<DocumentSnapshot> task)
             {
-              chooseIntentForUser();
+              if(task.isSuccessful())
+              {
+                DocumentSnapshot doc = task.getResult();
+                if(doc != null && doc.exists())
+                {
+                  hostelOnlineUser.setUserId(user.getUid());
+                  hostelOnlineUser.setUserFirstName((String)doc.get("FirstName"));
+                  hostelOnlineUser.setUserLastName((String)doc.get("LastName"));
+                  hostelOnlineUser.setUserEmail((String)doc.get("UserEmail"));
+                  hostelOnlineUser.setUserCourse((String)doc.get("Course"));
+                  hostelOnlineUser.setUserRole((String)doc.get("Role"));
+                  hostelOnlineUser.setUserGender((String)doc.get("Gender"));
+                  hostelOnlineUser.setUserCampus((String)doc.get("Campus"));
+                  hostelOnlineUser.setUserPhoneNumber((String)doc.get("PhoneNumber"));
+                  Uri photoUrl = user.getPhotoUrl();
+                  if(photoUrl != null)
+                    hostelOnlineUser.setUserPhotoUrl(photoUrl.toString());
+                  chooseIntentForUser();
+                }else{
+                  for(UserInfo profile : user.getProviderData())
+                  {
+                    String displayName = profile.getDisplayName();
+                    if(displayName != null)
+                    {
+                      hostelOnlineUser.setUserFirstName(displayName.split(" ")[0]);
+                      hostelOnlineUser.setUserLastName(displayName.split(" ")[1]);
+                    }
+                    hostelOnlineUser.setUserEmail(profile.getEmail());
+                  }
+                  Intent signUpSendIntent = new Intent(MainActivity.this, SignUp.class);
+                  signUpSendIntent.putExtra("SignInProvider", "Google");
+                  startActivity(signUpSendIntent);
+                }
+              }else{
+                Toast.makeText(MainActivity.this, "Failed to retrieve user information, please try again.", Toast.LENGTH_LONG).show();
+              }
             }
           });
         }else{
-          Log.w("Google Sign In", "FirebaseAuthWithGoogle failed.");
-          Toast.makeText(getApplicationContext(), "Sign in unsuccessful, check your network connection or try again later.", Toast.LENGTH_LONG).show();
+          Toast.makeText(MainActivity.this, "Sign In failed, if you have no account please sign up.", Toast.LENGTH_LONG).show();
         }
       }
     });
@@ -141,10 +209,12 @@ public class MainActivity extends AppCompatActivity
   public void chooseIntentForUser()
   {
     if(hostelOnlineUser == null)
-      hostelOnlineUser = new HostelOnlineUser(getApplicationContext());
-    if(hostelOnlineUser.userRole != null && (hostelOnlineUser.userRoomLabel == null || hostelOnlineUser.userHostelName == null || hostelOnlineUser.userRoomLabel.length() == 0 || hostelOnlineUser.userHostelName.length() == 0))
     {
-      if(hostelOnlineUser.userRole.equals("Student"))
+      Toast.makeText(MainActivity.this, "Please Login or Sign Up.", Toast.LENGTH_LONG).show();
+    }
+    if(hostelOnlineUser.getUserRole() != null && (hostelOnlineUser.getUserRoomLabel() == null || hostelOnlineUser.getUserHostelId() == null || hostelOnlineUser.getUserRoomLabel().length() == 0 || hostelOnlineUser.getUserHostelId().length() == 0))
+    {
+      if(hostelOnlineUser.getUserRole().equals("Student"))
       {
         Intent sendHostelsListIntent = new Intent(getApplicationContext(), HostelsList.class);
         startActivity(sendHostelsListIntent);

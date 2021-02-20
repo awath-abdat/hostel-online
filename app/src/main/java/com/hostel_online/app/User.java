@@ -22,6 +22,7 @@ import com.google.firebase.auth.FirebaseUser;
 
 public class User extends AppCompatActivity
 {
+  private HostelOnlineUser hostelOnlineUser;
   @Override
   public void onLowMemory()
   {
@@ -34,14 +35,16 @@ public class User extends AppCompatActivity
   {
     super.onCreate(savedInstanceState);
     setContentView(R.layout.activity_user);
+    Intent userIntentReceive = getIntent();
+    hostelOnlineUser = userIntentReceive.getParcelableExtra("HostelOnlineUser");
     BottomAppBar bottomAppBar = findViewById(R.id.bottom_app_bar);
     FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
-    transaction.replace(R.id.fragment_container, new user_home());
+    transaction.replace(R.id.fragment_container, new user_home(hostelOnlineUser));
     transaction.addToBackStack(null);
     transaction.commit();
-    if(MainActivity.hostelOnlineUser != null && MainActivity.hostelOnlineUser.userRole != null)
+    if(hostelOnlineUser != null && hostelOnlineUser.getUserRole() != null)
     {
-      switch (MainActivity.hostelOnlineUser.userRole) {
+      switch (hostelOnlineUser.getUserRole()) {
         case "Admin":
           bottomAppBar.replaceMenu(R.menu.user_bottom_nav_admin_menu);
           break;
@@ -54,14 +57,8 @@ public class User extends AppCompatActivity
       }
     }
     else{
-      MainActivity.hostelOnlineUser = new HostelOnlineUser(getApplicationContext());
-      MainActivity.hostelOnlineUser.setOnFinishListener(new OnFinishListener(){
-        @Override
-        public void onFinish()
-        {
-          chooseIntentForUser();
-        }
-      });
+      Intent loginIntentSend = new Intent(this, MainActivity.class);
+      startActivity(loginIntentSend);
       Timber.tag("userRole").w("Is Null");
     }
     bottomAppBar.setNavigationOnClickListener(new View.OnClickListener(){
@@ -69,7 +66,7 @@ public class User extends AppCompatActivity
       public void onClick(View v)
       {
         FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
-        transaction.replace(R.id.fragment_container, new user_home());
+        transaction.replace(R.id.fragment_container, new user_home(hostelOnlineUser));
         transaction.addToBackStack(null);
         transaction.commit();
       }
@@ -79,7 +76,7 @@ public class User extends AppCompatActivity
         switch (item.getItemId()) {
           case R.id.edit_profile: {
             FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
-            transaction.replace(R.id.fragment_container, new user_home());
+            transaction.replace(R.id.fragment_container, new user_home(hostelOnlineUser));
             transaction.addToBackStack(null);
             item.setChecked(true);
             transaction.commit();
@@ -87,7 +84,7 @@ public class User extends AppCompatActivity
           break;
           case R.id.menu_profile: {
             FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
-            transaction.replace(R.id.fragment_container, new user_profile());
+            transaction.replace(R.id.fragment_container, new user_profile(hostelOnlineUser));
             transaction.addToBackStack(null);
             item.setChecked(true);
             transaction.commit();
@@ -108,11 +105,15 @@ public class User extends AppCompatActivity
 
   public void chooseIntentForUser()
   {
-    if(MainActivity.hostelOnlineUser == null)
-      MainActivity.hostelOnlineUser = new HostelOnlineUser(getApplicationContext());
-    if(MainActivity.hostelOnlineUser.userRole != null && (MainActivity.hostelOnlineUser.userRoomLabel == null || MainActivity.hostelOnlineUser.userHostelName == null || MainActivity.hostelOnlineUser.userRoomLabel.length() == 0 || MainActivity.hostelOnlineUser.userHostelName.length() == 0))
+    if(hostelOnlineUser == null)
     {
-      if(MainActivity.hostelOnlineUser.userRole.equals("Student"))
+      Intent loginIntentSend = new Intent(this, MainActivity.class);
+      startActivity(loginIntentSend);
+      Timber.tag("userRole").w("Is Null");
+    }
+    if(hostelOnlineUser.getUserRole() != null && (hostelOnlineUser.getUserRoomLabel() == null || hostelOnlineUser.getUserHostelId() == null || hostelOnlineUser.getUserRoomLabel().length() == 0 || hostelOnlineUser.getUserHostelId().length() == 0))
+    {
+      if(hostelOnlineUser.getUserRole().equals("Student"))
       {
         Intent sendHostelsListIntent = new Intent(getApplicationContext(), HostelsList.class);
         startActivity(sendHostelsListIntent);

@@ -1,4 +1,5 @@
 <resources>
+    <string name="no_available_options">No Available Options.</string>
     <string name="freedom">Freedom</string>
     <string name="comfort">Comfort</string>
     <string name="Price">Price</string>

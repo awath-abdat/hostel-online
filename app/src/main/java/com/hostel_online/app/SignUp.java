@@ -40,26 +40,30 @@ import java.util.Map;
 
 public class SignUp extends AppCompatActivity
 {
-  FirebaseFirestore firestore;
-  String SignInProvider;
-  EditText etEmail;
-  EditText etPassword;
-  EditText etFirstName;
-  EditText etLastName;
-  EditText etPhoneNumber;
-  Spinner genderSpinner;
-  Spinner courseSpinner;
-  Spinner campusSpinner;
-  ImageView signUpProfileImage;
-  Uri selectedImage;
+  private FirebaseAuth signUpAuth;
+  private FirebaseFirestore firestore;
+  private String SignInProvider;
+  private EditText etEmail;
+  private EditText etPassword;
+  private EditText etFirstName;
+  private EditText etLastName;
+  private EditText etPhoneNumber;
+  private Spinner genderSpinner;
+  private Spinner courseSpinner;
+  private Spinner campusSpinner;
+  private ImageView signUpProfileImage;
+  private Uri selectedImage;
+  private HostelOnlineUser hostelOnlineUser;
   private static class UploadPhotoTask extends AsyncTask<String, Integer, String>{
     Map uploadResult;
     FirebaseUser user;
+    HostelOnlineUser hostelOnlineUser;
     private final WeakReference<Context> contextRef;
-    public UploadPhotoTask(Context context, FirebaseUser user)
+    public UploadPhotoTask(Context context, FirebaseUser user, HostelOnlineUser hostelOnlineUser)
     {
       this.contextRef = new WeakReference<>(context);
       this.user = user;
+      this.hostelOnlineUser = hostelOnlineUser;
     }
 
     @Override
@@ -68,7 +72,7 @@ public class SignUp extends AppCompatActivity
       Context context = contextRef.get();
       try {
         Cloudinary cloudinary = new Cloudinary(ObjectUtils.asMap("cloude_name", "dynyjan4a", "api_key", context.getResources().getString(R.string.cloudinary_key), "api_secret", context.getResources().getString(R.string.cloudinary_secret)));
-        uploadResult = cloudinary.uploader().upload(filepath[0], ObjectUtils.asMap("cloud_name", "dynyjan4a", "folder", "Users", "public_id", MainActivity.hostelOnlineUser.userId));
+        uploadResult = cloudinary.uploader().upload(filepath[0], ObjectUtils.asMap("cloud_name", "dynyjan4a", "folder", "Users", "public_id", hostelOnlineUser.getUserId()));
         Log.d("Cloud Upload Result", uploadResult.toString());
       } catch (Exception e) {
         Log.e("Fatal Cloudinery Failed", e.toString());
@@ -103,20 +107,19 @@ public class SignUp extends AppCompatActivity
     super.onCreate(savedInstanceState);
     Intent signUpIntentReceive = getIntent();
     SignInProvider = signUpIntentReceive.getStringExtra("SignInProvider");
-    if(SignInProvider != null)
+    hostelOnlineUser = (HostelOnlineUser)signUpIntentReceive.getParcelableExtra("HostelOnlineUser");
+    if(SignInProvider != null && SignInProvider.equals("Google"))
     {
       setContentView(R.layout.activity_sign_up_with_provider);
       signUpProfileImage = findViewById(R.id.sign_up_profile_image);
-      etEmail = (EditText) findViewById(R.id.sign_up_email);
       etFirstName = (EditText) findViewById(R.id.sign_up_first_name);
       etLastName = (EditText) findViewById(R.id.sign_up_last_name);
       ((TextView)(findViewById(R.id.sign_up_fill_in_details))).setText(getResources().getString(R.string.make_changes_where_necessary));
-      etEmail.setText(MainActivity.hostelOnlineUser.userEmail);
-      etFirstName.setText(MainActivity.hostelOnlineUser.userFirstName);
-      etLastName.setText(MainActivity.hostelOnlineUser.userLastName);
-      if(MainActivity.hostelOnlineUser.userPhotoUrl != null)
+      etFirstName.setText(hostelOnlineUser.getUserFirstName());
+      etLastName.setText(hostelOnlineUser.getUserLastName());
+      if(hostelOnlineUser.getUserPhotoUrl() != null)
       {
-        GlideApp.with(this).load(MainActivity.hostelOnlineUser.userPhotoUrl).into(signUpProfileImage);
+        GlideApp.with(this).load(hostelOnlineUser.getUserPhotoUrl()).into(signUpProfileImage);
       }
     }else{
       setContentView(R.layout.activity_sign_up);
@@ -178,7 +181,11 @@ public class SignUp extends AppCompatActivity
     Map<String, Object>userInfo = new HashMap<>();
     userInfo.put("FirstName", etFirstName.getText().toString());
     userInfo.put("LastName", etLastName.getText().toString());
-    userInfo.put("UserEmail", etEmail.getText().toString());
+    if(etEmail != null || SignInProvider == null)
+    {
+      userInfo.put("UserEmail", etEmail.getText().toString());
+      hostelOnlineUser.setUserEmail(etEmail.getText().toString());
+    }
     userInfo.put("PhoneNumber", etPhoneNumber.getText().toString());
     userInfo.put("Gender", genderSpinner.getSelectedItem().toString());
     userInfo.put("Course", courseSpinner.getSelectedItem().toString());
@@ -186,26 +193,31 @@ public class SignUp extends AppCompatActivity
     userInfo.put("Role", "Student");
     String filepath;
     df.set(userInfo);
-    MainActivity.hostelOnlineUser.userId = user.getUid();
-    MainActivity.hostelOnlineUser.userDisplayName = etFirstName.getText().toString() + " " + etLastName.getText().toString();
-    MainActivity.hostelOnlineUser.userEmail = etEmail.getText().toString();
-    MainActivity.hostelOnlineUser.userPhoneNumber = etPhoneNumber.getText().toString();
-    MainActivity.hostelOnlineUser.userGender = genderSpinner.getSelectedItem().toString();
-    MainActivity.hostelOnlineUser.userCourse = courseSpinner.getSelectedItem().toString();
-    MainActivity.hostelOnlineUser.userCampus = campusSpinner.getSelectedItem().toString();
-    MainActivity.hostelOnlineUser.userRole = "Student";
-    Cursor cursor = SignUp.this.getContentResolver().query(selectedImage, null, null, null, null);
-    if(cursor == null)
+    hostelOnlineUser.setUserId(user.getUid());
+    hostelOnlineUser.setUserFirstName(etFirstName.getText().toString());
+    hostelOnlineUser.setUserLastName(etLastName.getText().toString());
+    hostelOnlineUser.setUserPhoneNumber(etPhoneNumber.getText().toString());
+    hostelOnlineUser.setUserGender(genderSpinner.getSelectedItem().toString());
+    hostelOnlineUser.setUserCourse(courseSpinner.getSelectedItem().toString());
+    hostelOnlineUser.setUserCampus(campusSpinner.getSelectedItem().toString());
+    hostelOnlineUser.setUserRole("Student");
+    if(selectedImage != null)
     {
-      filepath = selectedImage.getPath();
-    }else{
-      cursor.moveToFirst();
-      int idx = cursor.getColumnIndex(MediaStore.Images.ImageColumns.DATA);
-      filepath = cursor.getString(idx);
-      cursor.close();
+      Cursor cursor = SignUp.this.getContentResolver().query(selectedImage, null, null, null, null);
+      if(cursor == null)
+      {
+        filepath = selectedImage.getPath();
+      }else{
+        cursor.moveToFirst();
+        int idx = cursor.getColumnIndex(MediaStore.Images.ImageColumns.DATA);
+        filepath = cursor.getString(idx);
+        cursor.close();
+      }
+      UploadPhotoTask uploadPhotoTask = new UploadPhotoTask(getApplicationContext(), user, hostelOnlineUser);
+      uploadPhotoTask.execute(filepath);
     }
     UserProfileChangeRequest profileUpdates;
-    profileUpdates = new UserProfileChangeRequest.Builder().setDisplayName(MainActivity.hostelOnlineUser.userDisplayName).build();
+    profileUpdates = new UserProfileChangeRequest.Builder().setDisplayName(etFirstName.getText().toString() + " " + etLastName.getText().toString()).build();
     user.updateProfile(profileUpdates).addOnCompleteListener(new OnCompleteListener<Void>(){
       @Override
       public void onComplete(@NonNull Task<Void> task)
@@ -217,8 +229,6 @@ public class SignUp extends AppCompatActivity
         }
       }
     });
-    UploadPhotoTask uploadPhotoTask = new UploadPhotoTask(getApplicationContext(), user);
-    uploadPhotoTask.execute(filepath);
   }
 
   public void signUp(View v)
@@ -235,13 +245,13 @@ public class SignUp extends AppCompatActivity
           {
             updateUserDatabase(user);
           }else{
-            Toast.makeText(SignUp.this,"Failed to Create Account",Toast.LENGTH_SHORT).show();
+            Toast.makeText(SignUp.this,"Failed to Create Account, try again later.",Toast.LENGTH_SHORT).show();
           }
         }
       }).addOnFailureListener(new OnFailureListener() {
         @Override
         public void onFailure(@NonNull Exception e) {
-          Toast.makeText(SignUp.this,"Failed to Create Account General",Toast.LENGTH_SHORT).show();
+          Toast.makeText(SignUp.this,"Failed to Create Account, try again later.",Toast.LENGTH_SHORT).show();
         }
       });
     }else{
