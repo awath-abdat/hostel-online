@@ -12,4 +12,5 @@
     <color name="facebook_color">#FF000060</color>
     <color name="google_color">#FFFF0000</color>
     <color name="background">#FFFFFFFF</color>
+    <color name="transparent">#00FFFFFF</color>
 </resources>

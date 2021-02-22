@@ -36,7 +36,7 @@ public class User extends AppCompatActivity
     super.onCreate(savedInstanceState);
     setContentView(R.layout.activity_user);
     Intent userIntentReceive = getIntent();
-    hostelOnlineUser = userIntentReceive.getParcelableExtra("HostelOnlineUser");
+    hostelOnlineUser = (HostelOnlineUser)userIntentReceive.getParcelableExtra("HostelOnlineUser");
     BottomAppBar bottomAppBar = findViewById(R.id.bottom_app_bar);
     FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
     transaction.replace(R.id.fragment_container, new user_home(hostelOnlineUser));
@@ -44,7 +44,8 @@ public class User extends AppCompatActivity
     transaction.commit();
     if(hostelOnlineUser != null && hostelOnlineUser.getUserRole() != null)
     {
-      switch (hostelOnlineUser.getUserRole()) {
+      switch(hostelOnlineUser.getUserRole())
+      {
         case "Admin":
           bottomAppBar.replaceMenu(R.menu.user_bottom_nav_admin_menu);
           break;
@@ -55,8 +56,7 @@ public class User extends AppCompatActivity
           bottomAppBar.replaceMenu(R.menu.user_bottom_nav_student_menu);
           break;
       }
-    }
-    else{
+    }else{
       Intent loginIntentSend = new Intent(this, MainActivity.class);
       startActivity(loginIntentSend);
       Timber.tag("userRole").w("Is Null");

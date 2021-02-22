@@ -12,14 +12,14 @@
     tools:context=".Dialog">
 
     <TextView
-        android:id="@+id/desired_room_type_text"
+        android:id="@+id/desired_price_text"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:paddingStart="10dp"
         android:paddingTop="10dp"
         android:paddingEnd="10dp"
         android:paddingBottom="10dp"
-        android:text="@string/desired_room_type"
+        android:text="@string/choose_price"
         android:textAlignment="center"
         android:textColor="@color/uicyan"
         android:textSize="20sp"
@@ -28,7 +28,7 @@
         app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
-        android:id="@+id/dialog_single_room_button"
+        android:id="@+id/dialog_filter_price_high"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginTop="12dp"
@@ -36,47 +36,15 @@
         android:paddingTop="10dp"
         android:paddingEnd="10dp"
         android:paddingBottom="10dp"
-        android:text="@string/single_room"
+        android:text="@string/high"
         android:textColor="@color/uigray"
         android:textSize="16sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/desired_room_type_text" />
+        app:layout_constraintTop_toBottomOf="@+id/desired_price_text" />
 
     <TextView
-        android:id="@+id/dialog_tripple_room_button"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="12dp"
-        android:paddingStart="30dp"
-        android:paddingTop="10dp"
-        android:paddingEnd="10dp"
-        android:paddingBottom="10dp"
-        android:text="@string/tripple_room"
-        android:textColor="@color/uigray"
-        android:textSize="16sp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/dialog_double_room_button" />
-
-    <TextView
-        android:id="@+id/dialog_double_room_button"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="12dp"
-        android:paddingStart="30dp"
-        android:paddingTop="10dp"
-        android:paddingEnd="10dp"
-        android:paddingBottom="10dp"
-        android:text="@string/double_room"
-        android:textColor="@color/uigray"
-        android:textSize="16sp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/dialog_single_room_button" />
-
-    <TextView
-        android:id="@+id/dialog_any_room_button"
+        android:id="@+id/dialog_filter_price_any"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginTop="12dp"
@@ -89,5 +57,22 @@
         android:textSize="16sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/dialog_tripple_room_button" />
+        app:layout_constraintTop_toBottomOf="@+id/dialog_filter_price_low" />
+
+    <TextView
+        android:id="@+id/dialog_filter_price_low"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="12dp"
+        android:paddingStart="30dp"
+        android:paddingTop="10dp"
+        android:paddingEnd="10dp"
+        android:paddingBottom="10dp"
+        android:text="@string/low"
+        android:textColor="@color/uigray"
+        android:textSize="16sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/dialog_filter_price_high" />
+
 </androidx.constraintlayout.widget.ConstraintLayout>

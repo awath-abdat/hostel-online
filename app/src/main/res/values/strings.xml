@@ -1,4 +1,14 @@
 <resources>
+    <string name="choose_comfort">Sort by comfort</string>
+    <string name="choose_freedom">Sort by freedom</string>
+    <string name="choose_price">Sort by room price</string>
+    <string name="low">Low First</string>
+    <string name="high">High First</string>
+    <string name="no">No</string>
+    <string name="yes">Yes</string>
+    <string name="share_room_with_a_course_mate">Share a room with a course mate?</string>
+    <string name="desired_room_type">Choose a room type</string>
+    <string name="any">Any</string>
     <string name="no_available_options">No Available Options.</string>
     <string name="freedom">Freedom</string>
     <string name="comfort">Comfort</string>

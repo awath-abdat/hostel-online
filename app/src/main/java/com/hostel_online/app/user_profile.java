@@ -5,6 +5,7 @@ import android.os.Bundle;
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import android.os.Parcelable;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -17,6 +18,7 @@ public class user_profile extends Fragment
   public user_profile(HostelOnlineUser hostelOnlineUser)
   {
     this.hostelOnlineUser = hostelOnlineUser;
+    Log.w("Passes here", "User Home");
   }
 
   public static user_profile newInstance(HostelOnlineUser hostelOnlineUser)
@@ -33,10 +35,7 @@ public class user_profile extends Fragment
   {
     super.onCreate(savedInstanceState);
     if (getArguments() != null) {
-      hostelOnlineUser = getArguments().getParcelable("HostelOnlineUser");
-    }else{
-      Intent sendMainActivityIntent = new Intent(getActivity(), MainActivity.class);
-      startActivity(sendMainActivityIntent);
+      hostelOnlineUser = (HostelOnlineUser)getArguments().getParcelable("HostelOnlineUser");
     }
   }
 
@@ -46,7 +45,8 @@ public class user_profile extends Fragment
     View fragmentView = inflater.inflate(R.layout.fragment_user_profile, container, false);
     ImageView userProfileImage = fragmentView.findViewById(R.id.user_profile_image);
     String url = hostelOnlineUser.getUserPhotoUrl();
-    GlideApp.with(user_profile.this).load(url).into(userProfileImage);
+    if(url != null)
+      GlideApp.with(user_profile.this).load(url).into(userProfileImage);
     ((TextView)fragmentView.findViewById(R.id.user_profile_text)).setText(hostelOnlineUser.getUserDisplayName());
     ((TextView)fragmentView.findViewById(R.id.user_email_text)).setText(hostelOnlineUser.getUserEmail());
     ((TextView)fragmentView.findViewById(R.id.user_phone_number_text)).setText(hostelOnlineUser.getUserPhoneNumber());

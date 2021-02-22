@@ -88,13 +88,16 @@ public class HostelsList extends AppCompatActivity
   private final String ICON_SOURCE_ID = "icon-source-id";
   private final String RED_PIN_ICON_ID = "red-pin-icon-id";
   private final String ICON_LAYER_ID = "icon-layer-id";
-  public final static int RC_FILTER_CONTROLS = 60;
-
+  public final static int RC_FILTER_CONTROLS_ROOM_TYPE = 60;
+  public final static int RC_FILTER_CONTROLS_COURSE_MATE = 70;
+  public final static int RC_FILTER_CONTROLS_FILTER_PRICE = 80;
+  public final static int RC_FILTER_CONTROLS_FILTER_FREEDOM = 90;
+  public final static int RC_FILTER_CONTROLS_FILTER_COMFORT = 100;
   @Override
   public void onActivityResult(int requestCode, int resultCode, Intent data)
   {
     super.onActivityResult(requestCode, resultCode, data);
-    if(requestCode == RC_FILTER_CONTROLS && resultCode == RESULT_OK)
+    if((requestCode == RC_FILTER_CONTROLS_ROOM_TYPE || requestCode == RC_FILTER_CONTROLS_COURSE_MATE || requestCode == RC_FILTER_CONTROLS_FILTER_COMFORT || requestCode == RC_FILTER_CONTROLS_FILTER_FREEDOM || requestCode == RC_FILTER_CONTROLS_FILTER_PRICE) && resultCode == RESULT_OK)
     {
       FirebaseFirestore db = FirebaseFirestore.getInstance();
       roomType = data.getStringExtra("RoomType");
@@ -184,41 +187,45 @@ public class HostelsList extends AppCompatActivity
           case R.id.room_type:
           {
             Intent sendDialogIntent = new Intent(getApplicationContext(), Dialog.class);
-            sendDialogIntent.putExtra("RequestCode", RC_FILTER_CONTROLS);
+            sendDialogIntent.putExtra("RequestCode", RC_FILTER_CONTROLS_ROOM_TYPE);
             sendDialogIntent.putExtra("Filter", "RoomType");
-            startActivityForResult(sendDialogIntent, RC_FILTER_CONTROLS);
+            sendDialogIntent.putExtra("RoomType", roomType);
+            startActivityForResult(sendDialogIntent, RC_FILTER_CONTROLS_ROOM_TYPE);
           }
             break;
           case R.id.course_mate:
           {
             Intent sendDialogIntent = new Intent(getApplicationContext(), Dialog.class);
-            sendDialogIntent.putExtra("RequestCode", RC_FILTER_CONTROLS);
+            sendDialogIntent.putExtra("RequestCode", RC_FILTER_CONTROLS_COURSE_MATE);
             sendDialogIntent.putExtra("Filter", "CourseMate");
-            startActivityForResult(sendDialogIntent, RC_FILTER_CONTROLS);
+            sendDialogIntent.putExtra("RoomType", roomType);
+            startActivityForResult(sendDialogIntent, RC_FILTER_CONTROLS_COURSE_MATE);
           }
             break;
           case R.id.filter_price:
           {
             Intent sendDialogIntent = new Intent(getApplicationContext(), Dialog.class);
-            sendDialogIntent.putExtra("RequestCode", RC_FILTER_CONTROLS);
+            sendDialogIntent.putExtra("RequestCode", RC_FILTER_CONTROLS_FILTER_PRICE);
             sendDialogIntent.putExtra("Filter", "FilterPrice");
-            startActivityForResult(sendDialogIntent, RC_FILTER_CONTROLS);
+            sendDialogIntent.putExtra("RoomType", roomType);
+            startActivityForResult(sendDialogIntent, RC_FILTER_CONTROLS_FILTER_PRICE);
           }
             break;
           case R.id.filter_freedom:
           {
             Intent sendDialogIntent = new Intent(getApplicationContext(), Dialog.class);
-            sendDialogIntent.putExtra("RequestCode", RC_FILTER_CONTROLS);
+            sendDialogIntent.putExtra("RequestCode", RC_FILTER_CONTROLS_FILTER_FREEDOM);
             sendDialogIntent.putExtra("Filter", "FilterFreedom");
-            startActivityForResult(sendDialogIntent, RC_FILTER_CONTROLS);
+            sendDialogIntent.putExtra("RoomType", roomType);
+            startActivityForResult(sendDialogIntent, RC_FILTER_CONTROLS_FILTER_FREEDOM);
           }
             break;
           case R.id.filter_comfort:
           {
             Intent sendDialogIntent = new Intent(getApplicationContext(), Dialog.class);
-            sendDialogIntent.putExtra("RequestCode", RC_FILTER_CONTROLS);
+            sendDialogIntent.putExtra("RequestCode", RC_FILTER_CONTROLS_FILTER_COMFORT);
             sendDialogIntent.putExtra("Filter", "FilterComfort");
-            startActivityForResult(sendDialogIntent, RC_FILTER_CONTROLS);
+            startActivityForResult(sendDialogIntent, RC_FILTER_CONTROLS_FILTER_COMFORT);
           }
             break;
         }

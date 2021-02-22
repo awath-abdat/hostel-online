@@ -58,7 +58,7 @@ public class HostelOnlineUser implements Parcelable
     }
   };
 
-  public void setUserPhotoUrl(String userPhotourl)
+  public void setUserPhotoUrl(String userPhotoUrl)
   {
     this.userPhotoUrl = userPhotoUrl;
   }

@@ -5,6 +5,7 @@ import android.os.Bundle;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.RecyclerView;
 import android.os.Parcelable;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -23,7 +24,6 @@ public class user_home extends Fragment
   {
     user_home fragment = new user_home(hostelOnlineUser);
     Bundle args = new Bundle();
-    args.putParcelable("HostelOnlineUser", (Parcelable) hostelOnlineUser);
     fragment.setArguments(args);
     return fragment;
   }
@@ -34,9 +34,6 @@ public class user_home extends Fragment
     super.onCreate(savedInstanceState);
     if (getArguments() != null) {
       hostelOnlineUser = getArguments().getParcelable("HostelOnlineUser");
-    }else{
-      Intent sendMainActivityIntent = new Intent(getActivity(), MainActivity.class);
-      startActivity(sendMainActivityIntent);
     }
   }
 
@@ -49,7 +46,8 @@ public class user_home extends Fragment
     ((TextView)fragment.findViewById(R.id.user_parent_display_name)).setText(hostelOnlineUser.getUserDisplayName());
     ImageView userProfileImage = fragment.findViewById(R.id.user_profile_image);
     String url = hostelOnlineUser.getUserPhotoUrl();
-    GlideApp.with(user_home.this).load(url).into(userProfileImage);
+    if(url != null)
+      GlideApp.with(user_home.this).load(url).into(userProfileImage);
     RecyclerView rvNotifications = fragment.findViewById(R.id.user_notification_recycler);
     rvNotifications.setAdapter(new NotificationsAdapter(notifications));
     return fragment;
