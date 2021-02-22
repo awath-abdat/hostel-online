@@ -12,6 +12,7 @@ import android.database.Cursor;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.Parcelable;
 import android.provider.MediaStore;
 import android.util.Log;
 import android.view.View;
@@ -91,6 +92,9 @@ public class SignUp extends AppCompatActivity
         {
           if(task.isSuccessful())
           {
+            Intent sendHostelsList = new Intent(context, HostelsList.class);
+            sendHostelsList.putExtra("HostelOnlineUser", (Parcelable) hostelOnlineUser);
+            context.startActivity(sendHostelsList);
             Log.w("Task Complete", "Task Update Profile is Complete");
           }else{
             Toast.makeText(context, "Profile Photo not updated.", Toast.LENGTH_LONG).show();
@@ -107,9 +111,9 @@ public class SignUp extends AppCompatActivity
     super.onCreate(savedInstanceState);
     Intent signUpIntentReceive = getIntent();
     SignInProvider = signUpIntentReceive.getStringExtra("SignInProvider");
-    hostelOnlineUser = (HostelOnlineUser)signUpIntentReceive.getParcelableExtra("HostelOnlineUser");
     if(SignInProvider != null && SignInProvider.equals("Google"))
     {
+      hostelOnlineUser = (HostelOnlineUser)signUpIntentReceive.getParcelableExtra("HostelOnlineUser");
       setContentView(R.layout.activity_sign_up_with_provider);
       signUpProfileImage = findViewById(R.id.sign_up_profile_image);
       etFirstName = (EditText) findViewById(R.id.sign_up_first_name);
@@ -178,12 +182,14 @@ public class SignUp extends AppCompatActivity
   public void updateUserDatabase(FirebaseUser user)
   {
     DocumentReference df = firestore.collection("Users").document(user.getUid());
-    Map<String, Object>userInfo = new HashMap<>();
+    Map<String, Object> userInfo = new HashMap<>();
     userInfo.put("FirstName", etFirstName.getText().toString());
     userInfo.put("LastName", etLastName.getText().toString());
     if(etEmail != null || SignInProvider == null)
     {
       userInfo.put("UserEmail", etEmail.getText().toString());
+      if(hostelOnlineUser == null)
+        hostelOnlineUser = new HostelOnlineUser();
       hostelOnlineUser.setUserEmail(etEmail.getText().toString());
     }
     userInfo.put("PhoneNumber", etPhoneNumber.getText().toString());
@@ -193,6 +199,7 @@ public class SignUp extends AppCompatActivity
     userInfo.put("Role", "Student");
     String filepath;
     df.set(userInfo);
+    Log.w("User Info", userInfo.toString());
     hostelOnlineUser.setUserId(user.getUid());
     hostelOnlineUser.setUserFirstName(etFirstName.getText().toString());
     hostelOnlineUser.setUserLastName(etLastName.getText().toString());
@@ -213,7 +220,7 @@ public class SignUp extends AppCompatActivity
         filepath = cursor.getString(idx);
         cursor.close();
       }
-      UploadPhotoTask uploadPhotoTask = new UploadPhotoTask(getApplicationContext(), user, hostelOnlineUser);
+      UploadPhotoTask uploadPhotoTask = new UploadPhotoTask(SignUp.this, user, hostelOnlineUser);
       uploadPhotoTask.execute(filepath);
     }
     UserProfileChangeRequest profileUpdates;
