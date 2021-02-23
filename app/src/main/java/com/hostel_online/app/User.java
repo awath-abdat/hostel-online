@@ -97,6 +97,15 @@ public class User extends AppCompatActivity
             startActivity(sendAddHostelIntent);
           }
           break;
+          case R.id.logout:
+          {
+            FirebaseAuth auth = FirebaseAuth.getInstance();
+            auth.signOut();
+            Intent sendMainActivityIntent = new Intent(User.this, MainActivity.class);
+            sendMainActivityIntent.putExtra("LogOut", true);
+            startActivity(sendMainActivityIntent);
+          }
+          break;
         }
         return false;
       }

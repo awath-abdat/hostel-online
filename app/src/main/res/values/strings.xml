@@ -1,4 +1,5 @@
 <resources>
+    <string name="logout">Log Out</string>
     <string name="choose_comfort">Sort by comfort</string>
     <string name="choose_freedom">Sort by freedom</string>
     <string name="choose_price">Sort by room price</string>

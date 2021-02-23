@@ -153,7 +153,10 @@ public class EditOrAddHostel extends AppCompatActivity
   @Override
   protected void onCreate(Bundle savedInstanceState)
   {
-    String[] genders = {"Mixed", "Single Girls", "Single Boys"};
+    ArrayList<String> genders = new ArrayList<>();
+    genders.add("Mixed");
+    genders.add("Single, Girls");
+    genders.add("Single, Boys");
     Map<String, Object> tempLevel = new HashMap<>();
     tempLevel.put("Label", "Level 1");
     tempLevel.put("NumberOfRooms", 2);

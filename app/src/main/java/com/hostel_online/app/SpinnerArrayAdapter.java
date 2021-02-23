@@ -7,12 +7,14 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.TextView;
 
+import java.util.ArrayList;
+
 import androidx.annotation.NonNull;
 
 public class SpinnerArrayAdapter extends ArrayAdapter<String>
 {
-  final private String[] objects;
-  public SpinnerArrayAdapter(Context context, int textViewResourceId, String[] objects)
+  final private ArrayList<String> objects;
+  public SpinnerArrayAdapter(Context context, int textViewResourceId, ArrayList<String> objects)
   {
     super(context, textViewResourceId, objects);
     this.objects = objects;
@@ -33,7 +35,7 @@ public class SpinnerArrayAdapter extends ArrayAdapter<String>
   {
     View row = LayoutInflater.from(parent.getContext()).inflate(R.layout.spinner_layout, parent, false);
     final TextView rowText = row.findViewById(R.id.gender_spinner_text);
-    rowText.setText(objects[position]);
+    rowText.setText(objects.get(position));
     return row;
   }
 }

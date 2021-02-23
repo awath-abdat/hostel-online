@@ -209,7 +209,7 @@ public class Dialog extends Activity
             tvFilterPriceAny.setBackgroundColor(ResourcesCompat.getColor(getResources(), R.color.transparent, null));
           }
           break;
-          case "No":
+          case "Low":
           {
             tvFilterPriceHigh.setBackgroundColor(ResourcesCompat.getColor(getResources(), R.color.transparent, null));
             tvFilterPriceLow.setTextColor(ResourcesCompat.getColor(getResources(), R.color.white, null));
@@ -281,7 +281,7 @@ public class Dialog extends Activity
             tvFilterFreedomAny.setBackgroundColor(ResourcesCompat.getColor(getResources(), R.color.transparent, null));
           }
           break;
-          case "No":
+          case "Low":
           {
             tvFilterFreedomHigh.setBackgroundColor(ResourcesCompat.getColor(getResources(), R.color.transparent, null));
             tvFilterFreedomLow.setTextColor(ResourcesCompat.getColor(getResources(), R.color.white, null));
@@ -353,7 +353,7 @@ public class Dialog extends Activity
             tvFilterComfortAny.setBackgroundColor(ResourcesCompat.getColor(getResources(), R.color.transparent, null));
           }
           break;
-          case "No":
+          case "Low":
           {
             tvFilterComfortHigh.setBackgroundColor(ResourcesCompat.getColor(getResources(), R.color.transparent, null));
             tvFilterComfortLow.setTextColor(ResourcesCompat.getColor(getResources(), R.color.white, null));

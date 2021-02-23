@@ -47,7 +47,8 @@ public class MainActivity extends AppCompatActivity
   @Override
   protected void onCreate(Bundle savedInstanceState)
   {
-    if(hostelOnlineUser != null && hostelOnlineUser.getUserId() != null)
+    Intent receiveMainActivityIntent = getIntent();
+    if(hostelOnlineUser != null && hostelOnlineUser.getUserId() != null && receiveMainActivityIntent != null && !receiveMainActivityIntent.getBooleanExtra("LogOut", false))
     {
       chooseIntentForUser();
     }
@@ -227,9 +228,28 @@ public class MainActivity extends AppCompatActivity
     {
       if(hostelOnlineUser.getUserRole().equals("Student"))
       {
-        Intent sendHostelsListIntent = new Intent(getApplicationContext(), HostelsList.class);
-        sendHostelsListIntent.putExtra("HostelOnlineUser", (Parcelable) hostelOnlineUser);
-        startActivity(sendHostelsListIntent);
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
+        DocumentReference df = db.collection("Campuses").document(hostelOnlineUser.getUserCampus());
+        df.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>()
+        {
+          @Override
+          public void onComplete(@NonNull Task<DocumentSnapshot> task)
+          {
+            if(task.isSuccessful())
+            {
+              DocumentSnapshot doc = task.getResult();
+              if(doc.exists())
+              {
+                Log.w("Campus Info", (String)doc.get("Name"));
+                double[] campusLocation = {(double)doc.get("Lat"), (double)doc.get("Lng")};
+                Intent sendHostelsListIntent = new Intent(getApplicationContext(), HostelsList.class);
+                sendHostelsListIntent.putExtra("HostelOnlineUser", (Parcelable) hostelOnlineUser);
+                sendHostelsListIntent.putExtra("CampusLocation", campusLocation);
+                startActivity(sendHostelsListIntent);
+              }
+            }
+          }
+        });
       }else{
         Intent sendUserIntent = new Intent(getApplicationContext(), User.class);
         sendUserIntent.putExtra("HostelOnlineUser", (Parcelable) hostelOnlineUser);

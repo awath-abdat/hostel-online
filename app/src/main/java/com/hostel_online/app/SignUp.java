@@ -30,12 +30,16 @@ import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.UserProfileChangeRequest;
 import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.firestore.QueryDocumentSnapshot;
+import com.google.firebase.firestore.QuerySnapshot;
 
 import java.lang.ref.WeakReference;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -134,13 +138,38 @@ public class SignUp extends AppCompatActivity
     }
     etPassword = (EditText) findViewById(R.id.sign_up_password);
     etPhoneNumber = (EditText) findViewById(R.id.sign_up_phone_number);
-    String[] genders = {"Male", "Female"}, courses = {"Computer Science(BS)", "Software Engineering(BS)"}, campuses = {"Makerere University(MUK)", "Kyambogo University"};
+    ArrayList<String> genders = new ArrayList<>();
+    genders.add("Male");
+    genders.add("Female");
+    ArrayList<String> courses = new ArrayList<>();
+    courses.add("Computer Science(BS)");
+    courses.add("Software Engineering(BS)");
+    ArrayList<String> campuses = new ArrayList<>();
+    campuses.add("Makerere University(MUK)");
+    courses.add("Kyambogo University");
+    FirebaseFirestore db = FirebaseFirestore.getInstance();
     genderSpinner = findViewById(R.id.sign_up_gender_spinner);
     genderSpinner.setAdapter(new SpinnerArrayAdapter(this, R.layout.spinner_layout, genders));
     courseSpinner = findViewById(R.id.sign_up_course_spinner);
     courseSpinner.setAdapter(new SpinnerArrayAdapter(this, R.layout.spinner_layout, courses));
     campusSpinner = findViewById(R.id.sign_up_campus_spinner);
     campusSpinner.setAdapter(new SpinnerArrayAdapter(this, R.layout.spinner_layout, campuses));
+    db.collection("Campuses").get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>()
+    {
+      @Override
+      public void onComplete(@NonNull Task<QuerySnapshot> task)
+      {
+        if(task.isSuccessful())
+        {
+          ArrayList<String> lcampuses = new ArrayList<>();
+          for(QueryDocumentSnapshot doc : task.getResult())
+          {
+            lcampuses.add((String)doc.get("Name"));
+          }
+          campusSpinner.setAdapter(new SpinnerArrayAdapter(SignUp.this, R.layout.spinner_layout, lcampuses));
+        }
+      }
+    });
     signUpProfileImage.setOnClickListener(new View.OnClickListener(){
       @Override
       public void onClick(View v)

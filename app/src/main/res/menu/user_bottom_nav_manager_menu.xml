@@ -6,16 +6,19 @@
         android:title="@string/profile"
         android:icon="@drawable/user_white"
         app:showAsAction="ifRoom"  />
-    <item
-        android:id="@+id/menu_lion"
-        android:title="@string/make_final_payment"
-        app:showAsAction="never" />
+
     <item
         android:id="@+id/edit_profile"
         android:title="@string/edit_profile"
         app:showAsAction="never" />
+
     <item
         android:id="@+id/login_info"
         android:title="@string/login_info"
+        app:showAsAction="never" />
+
+    <item
+        android:id="@+id/logout"
+        android:title="@string/logout"
         app:showAsAction="never" />
 </menu>
