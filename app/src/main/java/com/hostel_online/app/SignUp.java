@@ -270,16 +270,17 @@ public class SignUp extends AppCompatActivity
   public void signUp(View v)
   {
     FirebaseAuth auth = FirebaseAuth.getInstance();
-    FirebaseUser user = auth.getCurrentUser();
     if(SignInProvider == null)
     {
       auth.createUserWithEmailAndPassword(etEmail.getText().toString(), etPassword.getText().toString()).addOnSuccessListener(new OnSuccessListener<AuthResult>()
       {
         @Override
         public void onSuccess(AuthResult authResult) {
+          FirebaseUser user = auth.getCurrentUser();
           if(user != null)
           {
             updateUserDatabase(user);
+            chooseIntentForUser();
           }else{
             Toast.makeText(SignUp.this,"Failed to Create Account, try again later.",Toast.LENGTH_SHORT).show();
           }
@@ -287,12 +288,59 @@ public class SignUp extends AppCompatActivity
       }).addOnFailureListener(new OnFailureListener() {
         @Override
         public void onFailure(@NonNull Exception e) {
-          Toast.makeText(SignUp.this,"Failed to Create Account, try again later.",Toast.LENGTH_SHORT).show();
+          Toast.makeText(SignUp.this, e.getLocalizedMessage(),Toast.LENGTH_SHORT).show();
         }
       });
     }else{
-      if(user != null)
+      FirebaseUser user = auth.getCurrentUser();
+      if(user != null) {
         updateUserDatabase(user);
+      }
     }
   }
+
+  public void chooseIntentForUser()
+  {
+    if(hostelOnlineUser == null)
+    {
+      Toast.makeText(SignUp.this, "Please Login or Sign Up.", Toast.LENGTH_LONG).show();
+    }
+    if(hostelOnlineUser.getUserRole() != null && (hostelOnlineUser.getUserRoomLabel() == null || hostelOnlineUser.getUserHostelId() == null || hostelOnlineUser.getUserRoomLabel().length() == 0 || hostelOnlineUser.getUserHostelId().length() == 0))
+    {
+      if(hostelOnlineUser.getUserRole().equals("Student"))
+      {
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
+        DocumentReference df = db.collection("Campuses").document(hostelOnlineUser.getUserCampus());
+        df.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>()
+        {
+          @Override
+          public void onComplete(@NonNull Task<DocumentSnapshot> task)
+          {
+            if(task.isSuccessful())
+            {
+              DocumentSnapshot doc = task.getResult();
+              if(doc.exists())
+              {
+                Log.w("Campus Info", (String)doc.get("Name"));
+                double[] campusLocation = {(double)doc.get("Lat"), (double)doc.get("Lng")};
+                Intent sendHostelsListIntent = new Intent(getApplicationContext(), HostelsList.class);
+                sendHostelsListIntent.putExtra("HostelOnlineUser", (Parcelable) hostelOnlineUser);
+                sendHostelsListIntent.putExtra("CampusLocation", campusLocation);
+                startActivity(sendHostelsListIntent);
+              }
+            }
+          }
+        });
+      }else{
+        Intent sendUserIntent = new Intent(getApplicationContext(), User.class);
+        sendUserIntent.putExtra("HostelOnlineUser", (Parcelable) hostelOnlineUser);
+        startActivity(sendUserIntent);
+      }
+    }else{
+      Intent intent = new Intent(getApplicationContext(), User.class);
+      intent.putExtra("HostelOnlineUser", (Parcelable) hostelOnlineUser);
+      startActivity(intent);
+    }
+  }
+
 }

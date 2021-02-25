@@ -18,6 +18,7 @@ import android.location.LocationListener;
 import android.location.LocationManager;
 import android.location.LocationProvider;
 import android.os.Bundle;
+import android.provider.Settings;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.MenuItem;
@@ -48,6 +49,8 @@ import com.mapbox.geojson.FeatureCollection;
 import com.mapbox.geojson.LineString;
 import com.mapbox.geojson.Point;
 import com.mapbox.mapboxsdk.Mapbox;
+import com.mapbox.mapboxsdk.camera.CameraPosition;
+import com.mapbox.mapboxsdk.geometry.LatLng;
 import com.mapbox.mapboxsdk.maps.MapView;
 import com.mapbox.mapboxsdk.maps.MapboxMap;
 import com.mapbox.mapboxsdk.maps.OnMapReadyCallback;
@@ -251,6 +254,11 @@ public class HostelsList extends AppCompatActivity implements LocationListener
     {
       locationManager = (LocationManager)this.getSystemService(Context.LOCATION_SERVICE);
       locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0, HostelsList.this);
+      if(!locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER))
+      {
+        Intent intent = new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS);
+        startActivity(intent);
+      }
       Location loc = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
       origin = Point.fromLngLat(32.5825, 0.3476);
       Log.w("Origin Set", origin.toString());
@@ -388,6 +396,7 @@ public class HostelsList extends AppCompatActivity implements LocationListener
       }
     });
 
+
     hostelMapView.getMapAsync(new OnMapReadyCallback(){
       @Override
       public void onMapReady(@NonNull final MapboxMap mapboxMap)
@@ -472,7 +481,9 @@ public class HostelsList extends AppCompatActivity implements LocationListener
               GeoJsonSource source = style.getSourceAs(ROUTE_SOURCE_ID);
               if(source != null)
               {
+                LineString lineString = LineString.fromPolyline(currentRoute.geometry(), PRECISION_6);
                 source.setGeoJson(LineString.fromPolyline(currentRoute.geometry(), PRECISION_6));
+                mapboxMap.setCameraPosition(new CameraPosition.Builder().target(new LatLng(origin.latitude(), origin.longitude())).build());
               }
             }
           });
@@ -487,6 +498,21 @@ public class HostelsList extends AppCompatActivity implements LocationListener
 
   public void updateHostelDetails(int position)
   {
+    if(ContextCompat.checkSelfPermission(HostelsList.this, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED)
+    {
+      locationManager = (LocationManager)HostelsList.this.getSystemService(Context.LOCATION_SERVICE);
+      locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0, HostelsList.this);
+      if(!locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER))
+      {
+        Intent intent = new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS);
+        startActivity(intent);
+      }
+      Location loc = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
+      origin = Point.fromLngLat(loc.getLongitude(), loc.getLatitude());
+      Log.w("Origin Set", origin.toString());
+    }else{
+      ActivityCompat.requestPermissions(HostelsList.this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, 1);
+    }
     if(hostels.size() == 0)
     {
       ivHostelImage.setBackground(getResources().getDrawable(R.mipmap.empty));
