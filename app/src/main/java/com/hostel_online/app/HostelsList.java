@@ -253,7 +253,7 @@ public class HostelsList extends AppCompatActivity implements LocationListener
     if(ContextCompat.checkSelfPermission(HostelsList.this, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED)
     {
       locationManager = (LocationManager)this.getSystemService(Context.LOCATION_SERVICE);
-      locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0, HostelsList.this);
+    //  locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0, HostelsList.this);
       if(!locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER))
       {
         Intent intent = new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS);

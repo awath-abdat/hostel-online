@@ -466,6 +466,7 @@ public class EditOrAddHostel extends AppCompatActivity
           @Override
           public void onSuccess(Void aVoid)
           {
+            Toast.makeText(EditOrAddHostel.this,"Hostel added",Toast.LENGTH_LONG).show();
             hostelId = df.getId();
             UploadImage uploadHostelImage = new UploadImage(getApplicationContext(), hostelId, "Image");
             uploadHostelImage.execute(hostelImagePath);
