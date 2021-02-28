@@ -4,11 +4,16 @@ public class Room
 {
   private String roomLabel;
   private String roomType;
-  private int image;
-  private int hostelId;
-  private int price;
-  private int bookingFee;
-  public Room(String roomLabel, String roomType, int image, int hostelId, int price, int bookingFee)
+  private String image;
+  private String hostelId;
+  private String price;
+  private String bookingFee;
+
+  public Room()
+  {
+  }
+
+  public Room(String roomLabel, String roomType, String image, String hostelId, String price, String bookingFee)
   {
     this.bookingFee = bookingFee;
     this.roomType = roomType;
@@ -18,23 +23,23 @@ public class Room
     this.hostelId = hostelId;
     this.roomLabel = roomLabel;
   }
-  public int getImage()
+  public String getImage()
   {
     return this.image;
   }
-  public int getPrice()
+  public String getPrice()
   {
     return this.price;
   }
-  public int getBookingFee()
+  public String getBookingFee()
   {
     return this.bookingFee;
   }
-  public void setBookingFee(int bookingFee)
+  public void setBookingFee(String bookingFee)
   {
     this.bookingFee = bookingFee;
   }
-  public int getHostelId()
+  public String getHostelId()
   {
     return this.hostelId;
   }
@@ -46,15 +51,15 @@ public class Room
   {
     return this.roomType;
   }
-  public void setImage(int image)
+  public void setImage(String image)
   {
     this.image = image;
   }
-  public void setPrice(int price)
+  public void setPrice(String price)
   {
     this.price = price;
   }
-  public void setHostelId(int hostelId)
+  public void setHostelId(String hostelId)
   {
     this.hostelId = hostelId;
   }

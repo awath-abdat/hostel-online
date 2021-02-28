@@ -4,36 +4,44 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+import java.util.ArrayList;
 import java.util.Map;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 public class NotificationsAdapter extends RecyclerView.Adapter<NotificationsAdapter.NotificationViewHolder>
 {
-  Notification[] notifications;
-  public NotificationsAdapter(Notification[] notifications)
+  ArrayList<Map<String, Object>> notifications;
+  public NotificationsAdapter(ArrayList<Map<String, Object>> notifications)
   {
     this.notifications = notifications;
   }
 
   public static class NotificationViewHolder extends RecyclerView.ViewHolder
   {
-    TextView tvUrgency;
-    TextView tvBody;
+    TextView tvTitle;
+    TextView tvMessage;
+    TextView tvDate;
     public NotificationViewHolder(View skeletonView)
     {
       super(skeletonView);
-      tvUrgency = (TextView) skeletonView.findViewById(R.id.notification_urgency);
-      tvBody = (TextView) skeletonView.findViewById(R.id.notification_body);
+      tvTitle = (TextView) skeletonView.findViewById(R.id.notification_title);
+      tvMessage = (TextView) skeletonView.findViewById(R.id.notification_message);
+      tvDate = (TextView) skeletonView.findViewById(R.id.notification_date);
     }
-    TextView getNotificationUrgencyTextView()
+    TextView getNotificationTitleTextView()
     {
-      return tvUrgency;
+      return tvTitle;
     }
 
-    TextView getNotificationBodyTextView()
+    TextView getNotificationMessageTextView()
     {
-      return tvBody;
+      return tvMessage;
+    }
+
+    TextView getNotificationDateTextView()
+    {
+      return tvDate;
     }
   }
 
@@ -47,12 +55,13 @@ public class NotificationsAdapter extends RecyclerView.Adapter<NotificationsAdap
   @Override
   public int getItemCount()
   {
-    return notifications.length;
+    return notifications.size();
   }
 
   public void onBindViewHolder(NotificationsAdapter.NotificationViewHolder skeletonViewHolder, final int position)
   {
-    skeletonViewHolder.getNotificationUrgencyTextView().setText(notifications[position].getUrgency());
-    skeletonViewHolder.getNotificationBodyTextView().setText(notifications[position].getBody());
+    skeletonViewHolder.getNotificationTitleTextView().setText((String)notifications.get(position).get("title"));
+    skeletonViewHolder.getNotificationMessageTextView().setText((String)notifications.get(position).get("message"));
+    skeletonViewHolder.getNotificationDateTextView().setText((String)notifications.get(position).get("date"));
   }
 }

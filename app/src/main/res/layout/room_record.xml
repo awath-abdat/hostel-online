@@ -76,7 +76,7 @@
             app:layout_constraintTop_toBottomOf="@+id/room_label">
 
             <Button
-                android:id="@+id/button"
+                android:id="@+id/book_button"
                 android:layout_width="wrap_content"
                 android:layout_height="39dp"
                 android:layout_marginStart="12dp"
@@ -94,12 +94,11 @@
                 android:id="@+id/price_text"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="12dp"
-                android:layout_marginTop="8dp"
+                android:layout_marginTop="12dp"
                 android:text="@string/price_rating_text"
                 android:textColor="@color/uigray"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
+                app:layout_constraintStart_toStartOf="@+id/room_type_text"
+                app:layout_constraintTop_toBottomOf="@+id/room_type_text" />
 
             <TextView
                 android:id="@+id/price"
@@ -108,17 +107,18 @@
                 android:text="@string/unavailable"
                 android:textColor="@color/uigray"
                 app:layout_constraintBaseline_toBaselineOf="@+id/price_text"
-                app:layout_constraintStart_toStartOf="@+id/room_type" />
+                app:layout_constraintEnd_toEndOf="@+id/booking_fee" />
 
             <TextView
                 android:id="@+id/room_type_text"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="8dp"
+                android:layout_marginStart="12dp"
+                android:layout_marginTop="12dp"
                 android:text="@string/room_type_text"
                 android:textColor="@color/uigray"
-                app:layout_constraintStart_toStartOf="@id/price_text"
-                app:layout_constraintTop_toBottomOf="@id/price_text" />
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
 
             <TextView
                 android:id="@+id/room_type"
@@ -133,11 +133,11 @@
                 android:id="@+id/booking_fee_text"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="8dp"
+                android:layout_marginTop="12dp"
                 android:text="@string/booking_fee"
                 android:textColor="@color/uigray"
                 app:layout_constraintStart_toStartOf="@+id/price_text"
-                app:layout_constraintTop_toBottomOf="@id/room_type_text" />
+                app:layout_constraintTop_toBottomOf="@+id/price_text" />
 
             <TextView
                 android:id="@+id/booking_fee"

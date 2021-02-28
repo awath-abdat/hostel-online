@@ -12,10 +12,14 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
+import android.location.Location;
+import android.location.LocationListener;
+import android.location.LocationManager;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.provider.MediaStore;
+import android.provider.Settings;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
@@ -50,7 +54,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
-public class EditOrAddHostel extends AppCompatActivity
+public class EditOrAddHostel extends AppCompatActivity implements LocationListener
 {
   private String hostelId;
   private String action;
@@ -144,6 +148,7 @@ public class EditOrAddHostel extends AppCompatActivity
   public static String currentRoomType = "Single";
   public static Map<String, Map<String, Object>> hostelLevels = new HashMap<>();
   public static Map<String, Map<String, Object>> hostelRooms = new HashMap<>();
+  private LocationManager locationManager;
   public final static int RC_UPDATE_HOSTEL_IMAGE = 10;
   public final static int RC_UPDATE_SINGLE_ROOM_IMAGE = 20;
   public final static int RC_UPDATE_DOUBLE_ROOM_IMAGE = 30;
@@ -423,148 +428,149 @@ public class EditOrAddHostel extends AppCompatActivity
       }
     });
 
-    btnCaptureLocation.setOnClickListener(new View.OnClickListener()
-    {
-      @Override
-      public void onClick(View v)
-      {
-        getPlacePickerActivity();
-      }
-    });
+    btnCaptureLocation.setOnClickListener(v -> getPlacePickerActivity());
 
-    btnUpdateAddEditButton.setOnClickListener(new View.OnClickListener()
-    {
-      @Override
-      public void onClick(View v)
-      {
-        FirebaseFirestore db = FirebaseFirestore.getInstance();
-        DocumentReference df = db.collection("Hostels").document();
-        hostelName = etHostelName.getText().toString();
-        hostelDescription =  etHostelDescription.getText().toString();
-        hostelGender = spinnerGender.getSelectedItem().toString();
-        singleRoomPrice = etSingleRoomPriceFee.getText().toString();
-        singleRoomBookingFee = etSingleRoomBookingFee.getText().toString();
-        doubleRoomPrice = etDoubleRoomPriceFee.getText().toString();
-        doubleRoomBookingFee = etDoubleRoomBookingFee.getText().toString();
-        trippleRoomPrice = etTrippleRoomBookingFee.getText().toString();
-        trippleRoomBookingFee = etTrippleRoomBookingFee.getText().toString();
-        Map<String, Object> hostelData = new HashMap<>();
-        hostelData.put("Name", hostelName);
-        hostelData.put("Description", hostelDescription);
-        hostelData.put("Gender", hostelGender);
-        hostelData.put("Levels", hostelLevels);
-        hostelData.put("Rooms", hostelRooms);
-        hostelData.put("SingleRoomPrice", singleRoomPrice);
-        hostelData.put("SingleRoomBookingFee", singleRoomBookingFee);
-        hostelData.put("DoubleRoomPrice", doubleRoomPrice);
-        hostelData.put("DoubleRoomBookingFee", doubleRoomBookingFee);
-        hostelData.put("TrippleRoomPrice", trippleRoomPrice);
-        hostelData.put("TrippleRoomBookingFee", trippleRoomBookingFee);
-        hostelData.put("Location", hostelLocation);
-        df.set(hostelData).addOnSuccessListener(new OnSuccessListener<Void>()
-        {
+    btnUpdateAddEditButton.setOnClickListener(v -> {
+      FirebaseFirestore db = FirebaseFirestore.getInstance();
+      DocumentReference df = db.collection("Hostels").document();
+      hostelName = etHostelName.getText().toString();
+      hostelDescription =  etHostelDescription.getText().toString();
+      hostelGender = spinnerGender.getSelectedItem().toString();
+      singleRoomPrice = etSingleRoomPriceFee.getText().toString();
+      singleRoomBookingFee = etSingleRoomBookingFee.getText().toString();
+      doubleRoomPrice = etDoubleRoomPriceFee.getText().toString();
+      doubleRoomBookingFee = etDoubleRoomBookingFee.getText().toString();
+      trippleRoomPrice = etTrippleRoomBookingFee.getText().toString();
+      trippleRoomBookingFee = etTrippleRoomBookingFee.getText().toString();
+      Map<String, Object> hostelData = new HashMap<>();
+      hostelData.put("Name", hostelName);
+      hostelData.put("Description", hostelDescription);
+      hostelData.put("Gender", hostelGender);
+      hostelData.put("Levels", hostelLevels);
+      hostelData.put("Rooms", hostelRooms);
+      hostelData.put("SingleRoomPrice", singleRoomPrice);
+      hostelData.put("SingleRoomBookingFee", singleRoomBookingFee);
+      hostelData.put("DoubleRoomPrice", doubleRoomPrice);
+      hostelData.put("DoubleRoomBookingFee", doubleRoomBookingFee);
+      hostelData.put("TrippleRoomPrice", trippleRoomPrice);
+      hostelData.put("TrippleRoomBookingFee", trippleRoomBookingFee);
+      hostelData.put("Location", hostelLocation);
+      df.set(hostelData).addOnSuccessListener(aVoid -> {
+        hostelId = df.getId();
+        UploadImage uploadHostelImage = new UploadImage(getApplicationContext(), hostelId, "Image");
+        uploadHostelImage.execute(hostelImagePath);
+        UploadImage uploadSingleRoomImage = new UploadImage(getApplicationContext(), hostelId, "SingleRoomImage");
+        uploadSingleRoomImage.execute(singleRoomImagePath);
+        UploadImage uploadDoubleRoomImage = new UploadImage(getApplicationContext(), hostelId, "DoubleRoomImage");
+        uploadDoubleRoomImage.execute(doubleRoomImagePath);
+        UploadImage uploadTrippleRoomImage = new UploadImage(getApplicationContext(), hostelId, "TrippleRoomImage");
+        uploadTrippleRoomImage.setOnFinishListener(new OnFinishListener(){
           @Override
-          public void onSuccess(Void aVoid)
+          public void onFinish()
           {
-            hostelId = df.getId();
-            UploadImage uploadHostelImage = new UploadImage(getApplicationContext(), hostelId, "Image");
-            uploadHostelImage.execute(hostelImagePath);
-            UploadImage uploadSingleRoomImage = new UploadImage(getApplicationContext(), hostelId, "SingleRoomImage");
-            uploadSingleRoomImage.execute(singleRoomImagePath);
-            UploadImage uploadDoubleRoomImage = new UploadImage(getApplicationContext(), hostelId, "DoubleRoomImage");
-            uploadDoubleRoomImage.execute(doubleRoomImagePath);
-            UploadImage uploadTrippleRoomImage = new UploadImage(getApplicationContext(), hostelId, "TrippleRoomImage");
-            uploadTrippleRoomImage.setOnFinishListener(new OnFinishListener(){
-              @Override
-              public void onFinish()
-              {
-                Intent i = new Intent(getApplicationContext(), User.class);
-                startActivity(i);
-              }
-            });
-            uploadTrippleRoomImage.execute(trippleRoomImagePath);
+            Intent i = new Intent(getApplicationContext(), User.class);
+            startActivity(i);
           }
         });
-      }
+        uploadTrippleRoomImage.execute(trippleRoomImagePath);
+      });
     });
 
   }
 
   public void getPlacePickerActivity()
   {
-    startActivityForResult(new PlacePicker.IntentBuilder()
-    .accessToken(getString(R.string.mapbox_access_token))
-    .placeOptions(PlacePickerOptions.builder()
-    .statingCameraPosition(new CameraPosition.Builder()
-    .target(new LatLng(0.3476, 32.5825)).zoom(8).build())
-    .build()).build(this), RC_UPDATE_CAPTURE_LOCATION);
+    Point currentLocation;
+    if(ContextCompat.checkSelfPermission(EditOrAddHostel.this, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED)
+    {
+      locationManager = (LocationManager)this.getSystemService(Context.LOCATION_SERVICE);
+      locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0, EditOrAddHostel.this);
+      if(!locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER))
+      {
+        Intent intent = new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS);
+        startActivityForResult(intent, 2001);
+      }
+      Location loc = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
+      if(loc != null)
+      {
+        currentLocation = Point.fromLngLat(loc.getLongitude(), loc.getLatitude());
+      }else{
+        currentLocation = Point.fromLngLat(32.5825, 0.3476);
+      }
+      startActivityForResult(new PlacePicker.IntentBuilder()
+      .accessToken(getString(R.string.mapbox_access_token))
+      .placeOptions(PlacePickerOptions.builder()
+      .statingCameraPosition(new CameraPosition.Builder()
+      .target(new LatLng(currentLocation.latitude(), currentLocation.longitude())).zoom(8).build())
+      .build()).build(this), RC_UPDATE_CAPTURE_LOCATION);
+    }else{
+      ActivityCompat.requestPermissions(EditOrAddHostel.this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, 2000);
+    }
   }
 
   @Override
-  protected void onActivityResult(int requestCode, int resultCode, Intent imageReturnedIntent)
+  protected void onActivityResult(int requestCode, int resultCode, Intent data)
   {
-    super.onActivityResult(requestCode, resultCode, imageReturnedIntent);
-    if(requestCode != RC_UPDATE_CAPTURE_LOCATION)
-    {
-      if(resultCode == RESULT_OK)
-      {
-        Uri imageUrl = imageReturnedIntent.getData();
-        String filepath;
-        Cursor cursor = getApplicationContext().getContentResolver().query(imageUrl, null, null, null, null);
-        if(cursor == null)
-        {
-          filepath = imageUrl.getPath();
-        }else{
-          cursor.moveToFirst();
-          int idx = cursor.getColumnIndex(MediaStore.Images.ImageColumns.DATA);
-          filepath = cursor.getString(idx);
-          cursor.close();
-        }
-        switch(requestCode)
-        {
-          case RC_UPDATE_HOSTEL_IMAGE:
-          {
-            hostelImagePath = filepath;
-            GlideApp.with(getApplicationContext()).load(filepath).into(ivHostelImage);
+    super.onActivityResult(requestCode, resultCode, data);
+    switch(requestCode) {
+      case RC_UPDATE_HOSTEL_IMAGE:
+      case RC_UPDATE_SINGLE_ROOM_IMAGE:
+      case RC_UPDATE_DOUBLE_ROOM_IMAGE:
+      case RC_UPDATE_TRIPPLE_ROOM_IMAGE: {
+        if (resultCode == RESULT_OK) {
+          Uri imageUrl = data.getData();
+          String filepath;
+          Cursor cursor = getApplicationContext().getContentResolver().query(imageUrl, null, null, null, null);
+          if (cursor == null) {
+            filepath = imageUrl.getPath();
+          } else {
+            cursor.moveToFirst();
+            int idx = cursor.getColumnIndex(MediaStore.Images.ImageColumns.DATA);
+            filepath = cursor.getString(idx);
+            cursor.close();
           }
-          break;
-          case RC_UPDATE_SINGLE_ROOM_IMAGE:
-          {
-            singleRoomImagePath = filepath;
-            GlideApp.with(getApplicationContext()).load(filepath).into(ivSingleRoomImage);
-          }
-          break;
-          case RC_UPDATE_DOUBLE_ROOM_IMAGE:
-          {
-            doubleRoomImagePath = filepath;
-            GlideApp.with(getApplicationContext()).load(filepath).into(ivDoubleRoomImage);
-          }
-          break;
-          case RC_UPDATE_TRIPPLE_ROOM_IMAGE:
-          {
-            trippleRoomImagePath = filepath;
-            GlideApp.with(getApplicationContext()).load(filepath).into(ivTrippleRoomImage);
-          }
-          break;
-          default:
+          switch (requestCode) {
+            case RC_UPDATE_HOSTEL_IMAGE: {
+              hostelImagePath = filepath;
+              GlideApp.with(getApplicationContext()).load(filepath).into(ivHostelImage);
+            }
             break;
+            case RC_UPDATE_SINGLE_ROOM_IMAGE: {
+              singleRoomImagePath = filepath;
+              GlideApp.with(getApplicationContext()).load(filepath).into(ivSingleRoomImage);
+            }
+            break;
+            case RC_UPDATE_DOUBLE_ROOM_IMAGE: {
+              doubleRoomImagePath = filepath;
+              GlideApp.with(getApplicationContext()).load(filepath).into(ivDoubleRoomImage);
+            }
+            break;
+            case RC_UPDATE_TRIPPLE_ROOM_IMAGE: {
+              trippleRoomImagePath = filepath;
+              GlideApp.with(getApplicationContext()).load(filepath).into(ivTrippleRoomImage);
+            }
+            break;
+            default:
+              break;
+          }
         }
       }
-    }else{
-      if(resultCode == RESULT_OK)
-      {
-        CarmenFeature feature = PlaceAutocomplete.getPlace(imageReturnedIntent);
-        Timber.tag("HostelLocation").w("Works through here.");
-        Timber.tag("HostelLocation").w(feature.toString());
-        if(feature.geometry() != null)
-        {
-          hostelLocation.put("Lat", ((Point)feature.geometry()).latitude());
-          hostelLocation.put("Lng", ((Point)feature.geometry()).longitude());
-          Timber.tag("HostelLocation").w(hostelLocation.toString());
+      break;
+      case RC_UPDATE_CAPTURE_LOCATION: {
+        if (resultCode == RESULT_OK) {
+          CarmenFeature feature = PlaceAutocomplete.getPlace(data);
+          Timber.tag("HostelLocation").w("Works through here.");
+          Timber.tag("HostelLocation").w(feature.toString());
+          if (feature.geometry() != null) {
+            hostelLocation.put("Lat", ((Point) feature.geometry()).latitude());
+            hostelLocation.put("Lng", ((Point) feature.geometry()).longitude());
+            Timber.tag("HostelLocation").w(hostelLocation.toString());
+          }
+        } else {
+          Timber.tag("Failed:").w("OnResult Activity did not return RESULT_OK");
         }
-      }else{
-        Timber.tag("Failed:").w("OnResult Activity did not return RESULT_OK");
       }
+      break;
     }
   }
 
@@ -579,4 +585,26 @@ public class EditOrAddHostel extends AppCompatActivity
       }
     }
   }
+
+  @Override
+  public void onStatusChanged(String provider, int status, Bundle extras) {
+
+  }
+
+  @Override
+  public void onProviderEnabled(String provider) {
+
+  }
+
+  @Override
+  public void onProviderDisabled(String provider) {
+
+  }
+
+  @Override
+  public void onLocationChanged(Location location)
+  {
+
+  }
+
 }

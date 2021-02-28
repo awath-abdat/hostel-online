@@ -106,6 +106,11 @@ public class User extends AppCompatActivity
             startActivity(sendMainActivityIntent);
           }
           break;
+          case R.id.add_notification:
+          {
+            DialogNotification dn = new DialogNotification(hostelOnlineUser);
+            dn.show(getSupportFragmentManager(), "Notification");
+          }
         }
         return false;
       }

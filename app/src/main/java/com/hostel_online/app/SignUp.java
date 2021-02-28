@@ -4,6 +4,8 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
+import timber.log.Timber;
+
 import android.Manifest;
 import android.content.Context;
 import android.content.Intent;
@@ -96,9 +98,24 @@ public class SignUp extends AppCompatActivity
         {
           if(task.isSuccessful())
           {
-            Intent sendHostelsList = new Intent(context, HostelsList.class);
-            sendHostelsList.putExtra("HostelOnlineUser", (Parcelable) hostelOnlineUser);
-            context.startActivity(sendHostelsList);
+            FirebaseFirestore db = FirebaseFirestore.getInstance();
+            DocumentReference df = db.collection("Campuses").document(hostelOnlineUser.getUserCampus());
+            df.get().addOnCompleteListener((OnCompleteListener<DocumentSnapshot>) task1 -> {
+              if(task1.isSuccessful())
+              {
+                DocumentSnapshot doc = task1.getResult();
+                if(doc != null && doc.exists())
+                {
+                  Timber.tag("Campus Info").w((String) doc.get("Name"));
+                  Timber.tag("User").w(hostelOnlineUser.toString());
+                  @SuppressWarnings("ConstantConditions") double[] campusLocation = {doc.get("Lat") != null ? (double)doc.get("Lat") : 0.347596f, doc.get("Lng") != null ? (double)doc.get("Lat") : 32.582520};
+                  Intent sendHostelsListIntent = new Intent(context.getApplicationContext(), HostelsList.class);
+                  sendHostelsListIntent.putExtra("HostelOnlineUser", (Parcelable) hostelOnlineUser);
+                  sendHostelsListIntent.putExtra("CampusLocation", campusLocation);
+                  context.startActivity(sendHostelsListIntent);
+                }
+              }
+            });
             Log.w("Task Complete", "Task Update Profile is Complete");
           }else{
             Toast.makeText(context, "Profile Photo not updated.", Toast.LENGTH_LONG).show();
@@ -115,9 +132,9 @@ public class SignUp extends AppCompatActivity
     super.onCreate(savedInstanceState);
     Intent signUpIntentReceive = getIntent();
     SignInProvider = signUpIntentReceive.getStringExtra("SignInProvider");
-    if(SignInProvider != null && SignInProvider.equals("Google"))
+    hostelOnlineUser = (HostelOnlineUser)signUpIntentReceive.getParcelableExtra("HostelOnlineUser");
+    if(SignInProvider != null && SignInProvider.equals("Google") && hostelOnlineUser != null)
     {
-      hostelOnlineUser = (HostelOnlineUser)signUpIntentReceive.getParcelableExtra("HostelOnlineUser");
       setContentView(R.layout.activity_sign_up_with_provider);
       signUpProfileImage = findViewById(R.id.sign_up_profile_image);
       etFirstName = (EditText) findViewById(R.id.sign_up_first_name);
@@ -220,6 +237,8 @@ public class SignUp extends AppCompatActivity
       if(hostelOnlineUser == null)
         hostelOnlineUser = new HostelOnlineUser();
       hostelOnlineUser.setUserEmail(etEmail.getText().toString());
+    }else{
+      userInfo.put("UserEmail", hostelOnlineUser.getUserEmail());
     }
     userInfo.put("PhoneNumber", etPhoneNumber.getText().toString());
     userInfo.put("Gender", genderSpinner.getSelectedItem().toString());
@@ -254,15 +273,11 @@ public class SignUp extends AppCompatActivity
     }
     UserProfileChangeRequest profileUpdates;
     profileUpdates = new UserProfileChangeRequest.Builder().setDisplayName(etFirstName.getText().toString() + " " + etLastName.getText().toString()).build();
-    user.updateProfile(profileUpdates).addOnCompleteListener(new OnCompleteListener<Void>(){
-      @Override
-      public void onComplete(@NonNull Task<Void> task)
+    user.updateProfile(profileUpdates).addOnCompleteListener(task -> {
+      if(task.isSuccessful())
       {
-        if(task.isSuccessful())
-        {
-          Toast.makeText(SignUp.this, "Account Created", Toast.LENGTH_SHORT).show();
-          Log.w("Task Complete", "Task Update Profile is Complete");
-        }
+        Toast.makeText(SignUp.this, "Account Created", Toast.LENGTH_SHORT).show();
+        Log.w("Task Complete", "Task Update Profile is Complete");
       }
     });
   }

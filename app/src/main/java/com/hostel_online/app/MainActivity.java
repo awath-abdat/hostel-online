@@ -1,9 +1,7 @@
 package com.hostel_online.app;
 
-import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
-
-import android.content.Context;
+import timber.log.Timber;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
@@ -12,11 +10,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.TextView;
 import android.widget.Toast;
-
-import com.cloudinary.Cloudinary;
-import com.cloudinary.utils.ObjectUtils;
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.android.gms.auth.api.signin.GoogleSignInClient;
@@ -25,7 +19,6 @@ import com.google.android.gms.common.api.ApiException;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthCredential;
-import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.GoogleAuthProvider;
@@ -33,8 +26,6 @@ import com.google.firebase.auth.UserInfo;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
-import java.util.Map;
-import java.util.Objects;
 
 public class MainActivity extends AppCompatActivity
 {
@@ -52,6 +43,7 @@ public class MainActivity extends AppCompatActivity
     {
       chooseIntentForUser();
     }
+    Timber.plant(new Timber.DebugTree());
     mainFirebaseAuth = FirebaseAuth.getInstance();
     super.onCreate(savedInstanceState);
     GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN).requestIdToken("921715852424-t4ii2on8enqmp4f7hnq430soq9ksg9pi.apps.googleusercontent.com").requestEmail().build();
@@ -60,141 +52,116 @@ public class MainActivity extends AppCompatActivity
     etSignInEmail = (EditText) findViewById(R.id.sign_in_email);
     etSignInPassword = (EditText) findViewById(R.id.sign_in_password);
     Button bSignInButton = findViewById(R.id.sign_in_button);
-    bSignInButton.setOnClickListener(new View.OnClickListener(){
-      @Override
-      public void onClick(View v)
+    bSignInButton.setOnClickListener(v -> mainFirebaseAuth.signInWithEmailAndPassword(etSignInEmail.getText().toString(), etSignInPassword.getText().toString()).addOnCompleteListener(MainActivity.this, task -> {
+      if(task.isSuccessful())
       {
-        mainFirebaseAuth.signInWithEmailAndPassword(etSignInEmail.getText().toString(), etSignInPassword.getText().toString()).addOnCompleteListener(MainActivity.this, new OnCompleteListener<AuthResult>()
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
+        FirebaseUser user = mainFirebaseAuth.getCurrentUser();
+        hostelOnlineUser = new HostelOnlineUser();
+        if(user != null)
         {
-          @Override
-          public void onComplete(@NonNull Task<AuthResult> task)
-          {
-            if(task.isSuccessful())
+          DocumentReference df = db.collection("Users").document(user.getUid());
+          df.get().addOnCompleteListener(task1 -> {
+            if(task1.isSuccessful())
             {
-              FirebaseFirestore db = FirebaseFirestore.getInstance();
-              FirebaseUser user = mainFirebaseAuth.getCurrentUser();
-              hostelOnlineUser = new HostelOnlineUser();
-              if(user != null)
+              DocumentSnapshot doc = task1.getResult();
+              if(doc != null && doc.exists())
               {
-                DocumentReference df = db.collection("Users").document(user.getUid());
-                df.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>()
-                {
-                  @Override
-                  public void onComplete(@NonNull Task<DocumentSnapshot> task)
-                  {
-                    if(task.isSuccessful())
-                    {
-                      DocumentSnapshot doc = task.getResult();
-                      if(doc != null && doc.exists())
-                      {
-                        hostelOnlineUser.setUserId(user.getUid());
-                        hostelOnlineUser.setUserFirstName((String)doc.get("FirstName"));
-                        hostelOnlineUser.setUserLastName((String)doc.get("LastName"));
-                        hostelOnlineUser.setUserEmail((String)doc.get("UserEmail"));
-                        hostelOnlineUser.setUserCourse((String)doc.get("Course"));
-                        hostelOnlineUser.setUserRole((String)doc.get("Role"));
-                        hostelOnlineUser.setUserGender((String)doc.get("Gender"));
-                        hostelOnlineUser.setUserCampus((String)doc.get("Campus"));
-                        hostelOnlineUser.setUserPhoneNumber((String)doc.get("PhoneNumber"));
-                        Uri photoUrl = user.getPhotoUrl();
-                        if(photoUrl != null)
-                          hostelOnlineUser.setUserPhotoUrl(photoUrl.toString());
-                        chooseIntentForUser();
-                      }else{
-                        Intent signUpSendIntent = new Intent(MainActivity.this, SignUp.class);
-                        signUpSendIntent.putExtra("SignInProvider", "Email");
-                        startActivity(signUpSendIntent);
-                      }
-                    }else{
-                      Toast.makeText(MainActivity.this, "Failed to retrieve user information, please try again.", Toast.LENGTH_LONG).show();
-                    }
-                  }
-                });
+                hostelOnlineUser.setUserId(user.getUid());
+                hostelOnlineUser.setUserFirstName((String)doc.get("FirstName"));
+                hostelOnlineUser.setUserLastName((String)doc.get("LastName"));
+                hostelOnlineUser.setUserEmail((String)doc.get("UserEmail"));
+                hostelOnlineUser.setUserCourse((String)doc.get("Course"));
+                hostelOnlineUser.setUserRole((String)doc.get("Role"));
+                hostelOnlineUser.setUserGender((String)doc.get("Gender"));
+                hostelOnlineUser.setUserCampus((String)doc.get("Campus"));
+                hostelOnlineUser.setUserPhoneNumber((String)doc.get("PhoneNumber"));
+                hostelOnlineUser.setUserHostelId((String)doc.get("HostelId"));
+                hostelOnlineUser.setUserRoomLabel((String)doc.get("RoomLabel"));
+                Uri photoUrl = user.getPhotoUrl();
+                if(photoUrl != null)
+                  hostelOnlineUser.setUserPhotoUrl(photoUrl.toString());
+                chooseIntentForUser();
               }else{
-                Toast.makeText(MainActivity.this, "Sign In failed, if you have no account please sign up.", Toast.LENGTH_LONG).show();
+                Intent signUpSendIntent = new Intent(MainActivity.this, SignUp.class);
+                signUpSendIntent.putExtra("SignInProvider", "Email");
+                startActivity(signUpSendIntent);
               }
             }else{
-              Toast.makeText(MainActivity.this, "Sign In failed, if you have no account please sign up.", Toast.LENGTH_LONG).show();
+              Toast.makeText(MainActivity.this, "Failed to retrieve user information, please try again.", Toast.LENGTH_LONG).show();
             }
-          }
-        });
+          });
+        }else{
+          Toast.makeText(MainActivity.this, "Sign In failed, if you have no account please sign up.", Toast.LENGTH_LONG).show();
+        }
+      }else{
+        Toast.makeText(MainActivity.this, "Sign In failed, if you have no account please sign up.", Toast.LENGTH_LONG).show();
       }
-    });
+    }));
 
     Button bSignInWithGoogle = findViewById(R.id.sign_in_with_google);
-    bSignInWithGoogle.setOnClickListener(new View.OnClickListener(){
-      @Override
-      public void onClick(View v)
-      {
-        signInWithGoogle(v);
-      }
-    });
+    bSignInWithGoogle.setOnClickListener(this::signInWithGoogle);
   }
 
   private void firebaseAuthWithGoogle(String idToken)
   {
     AuthCredential credential = GoogleAuthProvider.getCredential(idToken, null);
-    mainFirebaseAuth.signInWithCredential(credential).addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
-      @Override
-      public void onComplete(@NonNull Task<AuthResult> task)
+    mainFirebaseAuth.signInWithCredential(credential).addOnCompleteListener(this, task -> {
+      if(task.isSuccessful())
       {
-        if(task.isSuccessful())
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
+        FirebaseUser user = mainFirebaseAuth.getCurrentUser();
+        hostelOnlineUser = new HostelOnlineUser();
+        if(user != null)
         {
-          FirebaseFirestore db = FirebaseFirestore.getInstance();
-          FirebaseUser user = mainFirebaseAuth.getCurrentUser();
-          hostelOnlineUser = new HostelOnlineUser();
-          if(user != null)
-          {
-            DocumentReference df = db.collection("Users").document(user.getUid());
-            df.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>()
+          DocumentReference df = db.collection("Users").document(user.getUid());
+          df.get().addOnCompleteListener(task1 -> {
+            if(task1.isSuccessful())
             {
-              @Override
-              public void onComplete(@NonNull Task<DocumentSnapshot> task)
+              DocumentSnapshot doc = task1.getResult();
+              if(doc != null && doc.exists())
               {
-                if(task.isSuccessful())
+                hostelOnlineUser.setUserId(user.getUid());
+                hostelOnlineUser.setUserFirstName((String)doc.get("FirstName"));
+                hostelOnlineUser.setUserLastName((String)doc.get("LastName"));
+                hostelOnlineUser.setUserEmail((String)doc.get("UserEmail"));
+                hostelOnlineUser.setUserCourse((String)doc.get("Course"));
+                hostelOnlineUser.setUserRole((String)doc.get("Role"));
+                hostelOnlineUser.setUserGender((String)doc.get("Gender"));
+                hostelOnlineUser.setUserCampus((String)doc.get("Campus"));
+                hostelOnlineUser.setUserPhoneNumber((String)doc.get("PhoneNumber"));
+                hostelOnlineUser.setUserHostelId((String)doc.get("HostelId"));
+                hostelOnlineUser.setUserRoomLabel((String)doc.get("RoomLabel"));
+                Uri photoUrl = user.getPhotoUrl();
+                if(photoUrl != null)
+                  hostelOnlineUser.setUserPhotoUrl(photoUrl.toString());
+                Log.w("User Hostel", doc.getData().toString());
+                chooseIntentForUser();
+              }else{
+                for(UserInfo profile : user.getProviderData())
                 {
-                  DocumentSnapshot doc = task.getResult();
-                  if(doc != null && doc.exists())
+                  String displayName = profile.getDisplayName();
+                  if(displayName != null)
                   {
-                    hostelOnlineUser.setUserId(user.getUid());
-                    hostelOnlineUser.setUserFirstName((String)doc.get("FirstName"));
-                    hostelOnlineUser.setUserLastName((String)doc.get("LastName"));
-                    hostelOnlineUser.setUserEmail((String)doc.get("UserEmail"));
-                    hostelOnlineUser.setUserCourse((String)doc.get("Course"));
-                    hostelOnlineUser.setUserRole((String)doc.get("Role"));
-                    hostelOnlineUser.setUserGender((String)doc.get("Gender"));
-                    hostelOnlineUser.setUserCampus((String)doc.get("Campus"));
-                    hostelOnlineUser.setUserPhoneNumber((String)doc.get("PhoneNumber"));
-                    Uri photoUrl = user.getPhotoUrl();
-                    if(photoUrl != null)
-                      hostelOnlineUser.setUserPhotoUrl(photoUrl.toString());
-                    chooseIntentForUser();
-                  }else{
-                    for(UserInfo profile : user.getProviderData())
-                    {
-                      String displayName = profile.getDisplayName();
-                      if(displayName != null)
-                      {
-                        hostelOnlineUser.setUserFirstName(displayName.split(" ")[0]);
-                        hostelOnlineUser.setUserLastName(displayName.split(" ")[1]);
-                      }
-                      hostelOnlineUser.setUserEmail(profile.getEmail());
-                    }
-                    Intent signUpSendIntent = new Intent(MainActivity.this, SignUp.class);
-                    signUpSendIntent.putExtra("SignInProvider", "Google");
-                    startActivity(signUpSendIntent);
+                    hostelOnlineUser.setUserFirstName(displayName.split(" ")[0]);
+                    hostelOnlineUser.setUserLastName(displayName.split(" ")[1]);
                   }
-                }else{
-                  Toast.makeText(MainActivity.this, "Failed to retrieve user information, please try again.", Toast.LENGTH_LONG).show();
+                  hostelOnlineUser.setUserEmail(profile.getEmail());
                 }
+                Intent signUpSendIntent = new Intent(MainActivity.this, SignUp.class);
+                signUpSendIntent.putExtra("SignInProvider", "Google");
+                signUpSendIntent.putExtra("HostelOnlineUser", (Parcelable) hostelOnlineUser);
+                startActivity(signUpSendIntent);
               }
-            });
-          }else{
-            Toast.makeText(MainActivity.this, "Sign In failed, if you have no account please sign up.", Toast.LENGTH_LONG).show();
-          }
+            }else{
+              Toast.makeText(MainActivity.this, "Failed to retrieve user information, please try again.", Toast.LENGTH_LONG).show();
+            }
+          });
         }else{
           Toast.makeText(MainActivity.this, "Sign In failed, if you have no account please sign up.", Toast.LENGTH_LONG).show();
         }
+      }else{
+        Toast.makeText(MainActivity.this, "Sign In failed, if you have no account please sign up.", Toast.LENGTH_LONG).show();
       }
     });
   }
@@ -212,11 +179,12 @@ public class MainActivity extends AppCompatActivity
           firebaseAuthWithGoogle(account.getIdToken());
         }
       }catch(ApiException e){
-        Log.w("Google Sign In", "FirebaseAuthWithGoogle failed. " + e.toString());
+        Timber.tag("Google Sign In").w("FirebaseAuthWithGoogle failed. %s", e.toString());
         Toast.makeText(getApplicationContext(), "Sign in unsuccessful, check your network connection or try again later.", Toast.LENGTH_LONG).show();
       }
     }
   }
+
 
   public void chooseIntentForUser()
   {
@@ -230,23 +198,19 @@ public class MainActivity extends AppCompatActivity
       {
         FirebaseFirestore db = FirebaseFirestore.getInstance();
         DocumentReference df = db.collection("Campuses").document(hostelOnlineUser.getUserCampus());
-        df.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>()
-        {
-          @Override
-          public void onComplete(@NonNull Task<DocumentSnapshot> task)
+        df.get().addOnCompleteListener((OnCompleteListener<DocumentSnapshot>) task -> {
+          if(task.isSuccessful())
           {
-            if(task.isSuccessful())
+            DocumentSnapshot doc = task.getResult();
+            if(doc != null && doc.exists())
             {
-              DocumentSnapshot doc = task.getResult();
-              if(doc.exists())
-              {
-                Log.w("Campus Info", (String)doc.get("Name"));
-                double[] campusLocation = {(double)doc.get("Lat"), (double)doc.get("Lng")};
-                Intent sendHostelsListIntent = new Intent(getApplicationContext(), HostelsList.class);
-                sendHostelsListIntent.putExtra("HostelOnlineUser", (Parcelable) hostelOnlineUser);
-                sendHostelsListIntent.putExtra("CampusLocation", campusLocation);
-                startActivity(sendHostelsListIntent);
-              }
+              Timber.tag("Campus Info").w((String) doc.get("Name"));
+              Timber.tag("User").w(hostelOnlineUser.toString());
+              @SuppressWarnings("ConstantConditions") double[] campusLocation = {doc.get("Lat") != null ? (double)doc.get("Lat") : 0.347596f, doc.get("Lng") != null ? (double)doc.get("Lat") : 32.582520};
+              Intent sendHostelsListIntent = new Intent(getApplicationContext(), HostelsList.class);
+              sendHostelsListIntent.putExtra("HostelOnlineUser", (Parcelable) hostelOnlineUser);
+              sendHostelsListIntent.putExtra("CampusLocation", campusLocation);
+              startActivity(sendHostelsListIntent);
             }
           }
         });

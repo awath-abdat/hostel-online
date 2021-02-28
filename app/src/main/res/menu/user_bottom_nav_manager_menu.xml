@@ -8,6 +8,11 @@
         app:showAsAction="ifRoom"  />
 
     <item
+        android:id="@+id/add_notification"
+        android:title="@string/add_notification"
+        app:showAsAction="never" />
+
+    <item
         android:id="@+id/edit_profile"
         android:title="@string/edit_profile"
         app:showAsAction="never" />

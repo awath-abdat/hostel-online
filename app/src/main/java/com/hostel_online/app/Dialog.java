@@ -1,9 +1,12 @@
 package com.hostel_online.app;
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
-import android.view.View;
+import android.util.Log;
+import android.widget.Button;
+import android.widget.EditText;
 import android.widget.TextView;
 import androidx.core.content.res.ResourcesCompat;
 
@@ -14,6 +17,8 @@ public class Dialog extends Activity
   public final static int RC_FILTER_CONTROLS_FILTER_PRICE = 80;
   public final static int RC_FILTER_CONTROLS_FILTER_FREEDOM = 90;
   public final static int RC_FILTER_CONTROLS_FILTER_COMFORT = 100;
+  public final static int RC_MAKE_BOOKING_PAYMENT = 500;
+  @SuppressLint("SetTextI18n")
   @Override
   protected void onCreate(Bundle savedInstanceState)
   {
@@ -22,6 +27,35 @@ public class Dialog extends Activity
     int requestCode = receiveDialogIntent.getIntExtra("RequestCode", 0);
     switch(requestCode)
     {
+      case RC_MAKE_BOOKING_PAYMENT:
+      {
+        setContentView(R.layout.dialog_pay_with_momo);
+        final Intent returnIntent = new Intent();
+        TextView tvBookingTitle = findViewById(R.id.booking_title);
+        EditText etMomoNumber = findViewById(R.id.number);
+        Button btnBook = findViewById(R.id.book);
+        Button btnCancel = findViewById(R.id.book_cancel);
+        String roomLabel = receiveDialogIntent.getStringExtra("RoomLabel");
+        if(roomLabel != null)
+          tvBookingTitle.setText("Booking Room " + roomLabel);
+        btnBook.setOnClickListener(v -> {
+          if(roomLabel != null && etMomoNumber.getText().toString().length() >= 10)
+          {
+            returnIntent.putExtra("Confirm", 1);
+            returnIntent.putExtra("RoomLabel", roomLabel);
+            returnIntent.putExtra("MoMoNumber", etMomoNumber.getText().toString());
+            setResult(RESULT_OK, returnIntent);
+          }else{
+            setResult(RESULT_CANCELED);
+          }
+          finish();
+        });
+        btnCancel.setOnClickListener(v -> {
+          setResult(RESULT_CANCELED);
+          finish();
+        });
+      }
+      break;
       case RC_FILTER_CONTROLS_ROOM_TYPE:
       {
         String currentRoomType = receiveDialogIntent.getStringExtra("RoomType");
@@ -71,49 +105,29 @@ public class Dialog extends Activity
           }
             break;
         }
-        tvSingleRoomButton.setOnClickListener(new View.OnClickListener()
-        {
-          @Override
-          public void onClick(View v)
-          {
-            Intent data = new Intent();
-            data.putExtra("RoomType", "Single");
-            setResult(RESULT_OK, data);
-            finish();
-          }
+        tvSingleRoomButton.setOnClickListener(v -> {
+          Intent data = new Intent();
+          data.putExtra("RoomType", "Single");
+          setResult(RESULT_OK, data);
+          finish();
         });
-        tvDoubleRoomButton.setOnClickListener(new View.OnClickListener()
-        {
-          @Override
-          public void onClick(View v)
-          {
-            Intent data = new Intent();
-            data.putExtra("RoomType", "Double");
-            setResult(RESULT_OK, data);
-            finish();
-          }
+        tvDoubleRoomButton.setOnClickListener(v -> {
+          Intent data = new Intent();
+          data.putExtra("RoomType", "Double");
+          setResult(RESULT_OK, data);
+          finish();
         });
-        tvTrippleRoomButton.setOnClickListener(new View.OnClickListener()
-        {
-          @Override
-          public void onClick(View v)
-          {
-            Intent data = new Intent();
-            data.putExtra("RoomType", "Tripple");
-            setResult(RESULT_OK, data);
-            finish();
-          }
+        tvTrippleRoomButton.setOnClickListener(v -> {
+          Intent data = new Intent();
+          data.putExtra("RoomType", "Tripple");
+          setResult(RESULT_OK, data);
+          finish();
         });
-        tvAnyRoomButton.setOnClickListener(new View.OnClickListener()
-        {
-          @Override
-          public void onClick(View v)
-          {
-            Intent data = new Intent();
-            data.putExtra("RoomType", "Any");
-            setResult(RESULT_OK, data);
-            finish();
-          }
+        tvAnyRoomButton.setOnClickListener(v -> {
+          Intent data = new Intent();
+          data.putExtra("RoomType", "Any");
+          setResult(RESULT_OK, data);
+          finish();
         });
       }
       break;
@@ -154,38 +168,23 @@ public class Dialog extends Activity
           }
           break;
         }
-        tvCourseMateYes.setOnClickListener(new View.OnClickListener()
-        {
-          @Override
-          public void onClick(View v)
-          {
-            Intent data = new Intent();
-            data.putExtra("CourseMate", "Yes");
-            setResult(RESULT_OK, data);
-            finish();
-          }
+        tvCourseMateYes.setOnClickListener(v -> {
+          Intent data = new Intent();
+          data.putExtra("CourseMate", "Yes");
+          setResult(RESULT_OK, data);
+          finish();
         });
-        tvCourseMateNo.setOnClickListener(new View.OnClickListener()
-        {
-          @Override
-          public void onClick(View v)
-          {
-            Intent data = new Intent();
-            data.putExtra("CourseMate", "No");
-            setResult(RESULT_OK, data);
-            finish();
-          }
+        tvCourseMateNo.setOnClickListener(v -> {
+          Intent data = new Intent();
+          data.putExtra("CourseMate", "No");
+          setResult(RESULT_OK, data);
+          finish();
         });
-        tvCourseMateAny.setOnClickListener(new View.OnClickListener()
-        {
-          @Override
-          public void onClick(View v)
-          {
-            Intent data = new Intent();
-            data.putExtra("CourseMate", "Any");
-            setResult(RESULT_OK, data);
-            finish();
-          }
+        tvCourseMateAny.setOnClickListener(v -> {
+          Intent data = new Intent();
+          data.putExtra("CourseMate", "Any");
+          setResult(RESULT_OK, data);
+          finish();
         });
       }
       break;
@@ -226,38 +225,23 @@ public class Dialog extends Activity
           }
           break;
         }
-        tvFilterPriceHigh.setOnClickListener(new View.OnClickListener()
-        {
-          @Override
-          public void onClick(View v)
-          {
-            Intent data = new Intent();
-            data.putExtra("FilterPrice", "High");
-            setResult(RESULT_OK, data);
-            finish();
-          }
+        tvFilterPriceHigh.setOnClickListener(v -> {
+          Intent data = new Intent();
+          data.putExtra("FilterPrice", "High");
+          setResult(RESULT_OK, data);
+          finish();
         });
-        tvFilterPriceLow.setOnClickListener(new View.OnClickListener()
-        {
-          @Override
-          public void onClick(View v)
-          {
-            Intent data = new Intent();
-            data.putExtra("FilterPrice", "Low");
-            setResult(RESULT_OK, data);
-            finish();
-          }
+        tvFilterPriceLow.setOnClickListener(v -> {
+          Intent data = new Intent();
+          data.putExtra("FilterPrice", "Low");
+          setResult(RESULT_OK, data);
+          finish();
         });
-        tvFilterPriceAny.setOnClickListener(new View.OnClickListener()
-        {
-          @Override
-          public void onClick(View v)
-          {
-            Intent data = new Intent();
-            data.putExtra("FilterPrice", "Any");
-            setResult(RESULT_OK, data);
-            finish();
-          }
+        tvFilterPriceAny.setOnClickListener(v -> {
+          Intent data = new Intent();
+          data.putExtra("FilterPrice", "Any");
+          setResult(RESULT_OK, data);
+          finish();
         });
       }
       break;
@@ -298,38 +282,23 @@ public class Dialog extends Activity
           }
           break;
         }
-        tvFilterFreedomHigh.setOnClickListener(new View.OnClickListener()
-        {
-          @Override
-          public void onClick(View v)
-          {
-            Intent data = new Intent();
-            data.putExtra("FilterFreedom", "High");
-            setResult(RESULT_OK, data);
-            finish();
-          }
+        tvFilterFreedomHigh.setOnClickListener(v -> {
+          Intent data = new Intent();
+          data.putExtra("FilterFreedom", "High");
+          setResult(RESULT_OK, data);
+          finish();
         });
-        tvFilterFreedomLow.setOnClickListener(new View.OnClickListener()
-        {
-          @Override
-          public void onClick(View v)
-          {
-            Intent data = new Intent();
-            data.putExtra("FilterFreedom", "Low");
-            setResult(RESULT_OK, data);
-            finish();
-          }
+        tvFilterFreedomLow.setOnClickListener(v -> {
+          Intent data = new Intent();
+          data.putExtra("FilterFreedom", "Low");
+          setResult(RESULT_OK, data);
+          finish();
         });
-        tvFilterFreedomAny.setOnClickListener(new View.OnClickListener()
-        {
-          @Override
-          public void onClick(View v)
-          {
-            Intent data = new Intent();
-            data.putExtra("FilterFreedom", "Any");
-            setResult(RESULT_OK, data);
-            finish();
-          }
+        tvFilterFreedomAny.setOnClickListener(v -> {
+          Intent data = new Intent();
+          data.putExtra("FilterFreedom", "Any");
+          setResult(RESULT_OK, data);
+          finish();
         });
       }
       break;
@@ -370,38 +339,23 @@ public class Dialog extends Activity
           }
           break;
         }
-        tvFilterComfortHigh.setOnClickListener(new View.OnClickListener()
-        {
-          @Override
-          public void onClick(View v)
-          {
-            Intent data = new Intent();
-            data.putExtra("FilterComfort", "High");
-            setResult(RESULT_OK, data);
-            finish();
-          }
+        tvFilterComfortHigh.setOnClickListener(v -> {
+          Intent data = new Intent();
+          data.putExtra("FilterComfort", "High");
+          setResult(RESULT_OK, data);
+          finish();
         });
-        tvFilterComfortLow.setOnClickListener(new View.OnClickListener()
-        {
-          @Override
-          public void onClick(View v)
-          {
-            Intent data = new Intent();
-            data.putExtra("FilterComfort", "Low");
-            setResult(RESULT_OK, data);
-            finish();
-          }
+        tvFilterComfortLow.setOnClickListener(v -> {
+          Intent data = new Intent();
+          data.putExtra("FilterComfort", "Low");
+          setResult(RESULT_OK, data);
+          finish();
         });
-        tvFilterComfortAny.setOnClickListener(new View.OnClickListener()
-        {
-          @Override
-          public void onClick(View v)
-          {
-            Intent data = new Intent();
-            data.putExtra("FilterComfort", "Any");
-            setResult(RESULT_OK, data);
-            finish();
-          }
+        tvFilterComfortAny.setOnClickListener(v -> {
+          Intent data = new Intent();
+          data.putExtra("FilterComfort", "Any");
+          setResult(RESULT_OK, data);
+          finish();
         });
       }
       break;
