@@ -1,8 +1,4 @@
 <resources>
-    <string name="booking_payment">Booking Payment</string>
-    <string name="momo_account">Enter Number to pay with</string>
-    <string name="add_notification">Add Notification</string>
-    <string name="no_available_rooms">No Available Rooms</string>
     <string name="logout">Log Out</string>
     <string name="choose_comfort">Sort by comfort</string>
     <string name="choose_freedom">Sort by freedom</string>
@@ -99,6 +95,4 @@
     <string name="no_account_end">account?</string>
     <string name="no_account_sign_up">Sign up</string>
     <string name="sign_up_fill_in_details">Fill in the details below to create an account.</string>
-    <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
 </resources>

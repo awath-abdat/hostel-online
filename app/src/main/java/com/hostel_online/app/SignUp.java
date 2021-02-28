@@ -7,6 +7,7 @@ import androidx.core.content.ContextCompat;
 import timber.log.Timber;
 
 import android.Manifest;
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
@@ -16,6 +17,8 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Parcelable;
 import android.provider.MediaStore;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
@@ -61,7 +64,7 @@ public class SignUp extends AppCompatActivity
   private ImageView signUpProfileImage;
   private Uri selectedImage;
   private HostelOnlineUser hostelOnlineUser;
-  private static class UploadPhotoTask extends AsyncTask<String, Integer, String>{
+  static class UploadPhotoTask extends AsyncTask<String, Integer, String>{
     Map uploadResult;
     FirebaseUser user;
     HostelOnlineUser hostelOnlineUser;
@@ -155,6 +158,13 @@ public class SignUp extends AppCompatActivity
     }
     etPassword = (EditText) findViewById(R.id.sign_up_password);
     etPhoneNumber = (EditText) findViewById(R.id.sign_up_phone_number);
+    
+    etEmail.addTextChangedListener(new TextChangedListener(etEmail));
+    etPassword.addTextChangedListener(new TextChangedListener(etPassword));
+    etPhoneNumber.addTextChangedListener(new TextChangedListener(etPhoneNumber));
+    etLastName.addTextChangedListener(new TextChangedListener(etLastName));
+    etFirstName.addTextChangedListener(new TextChangedListener(etFirstName));
+
     ArrayList<String> genders = new ArrayList<>();
     genders.add("Male");
     genders.add("Female");
@@ -283,7 +293,18 @@ public class SignUp extends AppCompatActivity
   }
 
   public void signUp(View v)
-  {
+  { if (!validateFName()) {
+    return;
+  }if (!validateLName()) {
+    return;
+  }
+    if (!validateEmail()){
+      return;
+    }if (!validatePhoneNumber()){
+    return;
+  }if (!validatePassword()) {
+    return;
+  }
     FirebaseAuth auth = FirebaseAuth.getInstance();
     if(SignInProvider == null)
     {
@@ -358,4 +379,105 @@ public class SignUp extends AppCompatActivity
     }
   }
 
-}
+  public boolean validatePassword() {
+    if (etPassword.getText().toString().trim().isEmpty()) {
+      etPassword.setError("Password is required");
+      etPassword.requestFocus();
+      return false;
+    } else if (etPassword.getText().toString().length() < 6) {
+      etPassword.setError("Password can't be less than 6 digit");
+      etPassword.requestFocus();
+      return false;
+    } else
+      // password.setErrorEnabled(false);
+
+      return true;
+  }
+  public boolean validatePhoneNumber() {
+    String PhoneNumber = etPhoneNumber.getText().toString();
+    String regex = "^(\\d{3}[- .]?){2}\\d{4}$";
+    if (etPhoneNumber.getText().toString().trim().isEmpty()) {
+      etPhoneNumber.setError("Please Enter Last Name");
+      etPhoneNumber.requestFocus();
+    } else if (!(PhoneNumber.matches(regex))) {
+      etPhoneNumber.setError("Please enter valid Phone number like 077 202 4843");
+    }
+
+    return true;
+  }
+
+  public boolean validateLName() {
+    if (etLastName.getText().toString().trim().isEmpty()) {
+      etLastName.setError("Please Enter Last Name");
+      etLastName.requestFocus();
+    }
+    return true;
+  }
+
+  public boolean validateFName() {
+    if (etFirstName.getText().toString().trim().isEmpty()) {
+      etFirstName.setError("Please Enter First Name");
+      etFirstName.requestFocus();
+    }
+    return true;
+  }
+
+  public boolean validateEmail() {
+    if (etEmail.getText().toString().trim().isEmpty()) {
+      etEmail.setError("Please enter email");
+    } else {
+      String emailId = etEmail.getText().toString();
+      boolean isValid = android.util.Patterns.EMAIL_ADDRESS.matcher(emailId).matches();
+      if (!isValid) {
+        etEmail.setError("Invalid Email address, ex: abc@example.com");
+        etEmail.requestFocus();
+        return false;
+      }
+      // email.setErrorEnabled(false);
+
+    }
+    return true;
+
+  }
+
+  private class TextChangedListener implements TextWatcher {
+    private final View view;
+
+    public TextChangedListener(View view) {
+      this.view = view;
+    }
+
+
+    @Override
+    public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+    }
+
+    @Override
+    public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+    }
+
+    @SuppressLint("NonConstantResourceId")
+    @Override
+    public void afterTextChanged(Editable s) {
+      switch (view.getId()) {
+        case R.id.sign_up_email:
+          validateEmail();
+          break;
+        case R.id.sign_up_password:
+          validatePassword();
+          break;
+        case R.id.sign_up_first_name:
+          validateFName();
+          break;
+        case R.id.sign_up_phone_number:
+          validatePhoneNumber();
+          break;
+        case R.id.sign_up_last_name:
+          validateLName();
+          break;
+      }
+    }
+
+  }}

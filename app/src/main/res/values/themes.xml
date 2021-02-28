@@ -100,4 +100,13 @@
         <item name="colorControlNormal">@color/uicyan</item>
         <item name="colorControlActivated">@color/uicyan</item>
     </style>
+
+    <style name="Theme.HostelOnline.NoActionBar">
+        <item name="windowActionBar">false</item>
+        <item name="windowNoTitle">true</item>
+    </style>
+
+    <style name="Theme.HostelOnline.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />
+
+    <style name="Theme.HostelOnline.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
 </resources>
