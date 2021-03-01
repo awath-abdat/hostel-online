@@ -108,4 +108,5 @@
     <string name="NOTIFICATIONS">Notifications</string>
     <string name="second_fragment_label">seconf fragment</string>
     <string name="first_fragment_label">first fragment</string>
+    <string name="ViewHostel">View Hostel</string>
 </resources>

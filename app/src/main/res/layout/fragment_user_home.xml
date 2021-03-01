@@ -8,8 +8,8 @@
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/header"
-        android:layout_width="402dp"
-        android:layout_height="103dp"
+        android:layout_width="399dp"
+        android:layout_height="118dp"
         android:background="@color/uicyan"
         android:paddingBottom="10dp"
         app:layout_constraintEnd_toEndOf="parent"
@@ -20,7 +20,7 @@
             android:id="@+id/sign_up_app_title"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="20dp"
+            android:layout_marginStart="56dp"
             android:fontFamily="@font/segoescript"
             android:text="@string/app_name"
             android:textColor="@color/white"
@@ -40,10 +40,10 @@
 
         <de.hdodenhof.circleimageview.CircleImageView
             android:id="@+id/user_profile_image"
-            android:layout_width="101dp"
-            android:layout_height="76dp"
-            android:layout_marginTop="10dp"
-            android:layout_marginEnd="20dp"
+            android:layout_width="128dp"
+            android:layout_height="108dp"
+            android:layout_marginTop="4dp"
+            android:layout_marginEnd="8dp"
             android:background="@drawable/image_circle"
             android:contentDescription="@string/app_name"
             android:src="@drawable/user"

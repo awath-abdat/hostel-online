@@ -206,7 +206,7 @@ public class MainActivity extends AppCompatActivity
             {
               Timber.tag("Campus Info").w((String) doc.get("Name"));
               Timber.tag("User").w(hostelOnlineUser.toString());
-              @SuppressWarnings("ConstantConditions") double[] campusLocation = {doc.get("Lat") != null ? (double)doc.get("Lat") : 0.347596f, doc.get("Lng") != null ? (double)doc.get("Lat") : 32.582520};
+              @SuppressWarnings("ConstantConditions") double[] campusLocation = {doc.get("Lat") != null ? (double)doc.get("Lat") : 0.347596f, doc.get("Lng") != null ? (double)doc.get("Lng") : 32.582520};
               Intent sendHostelsListIntent = new Intent(getApplicationContext(), HostelsList.class);
               sendHostelsListIntent.putExtra("HostelOnlineUser", (Parcelable) hostelOnlineUser);
               sendHostelsListIntent.putExtra("CampusLocation", campusLocation);

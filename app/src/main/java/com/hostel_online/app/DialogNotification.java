@@ -15,8 +15,8 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.annotation.RequiresApi;
-import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.app.AppCompatDialogFragment;
+import androidx.fragment.app.DialogFragment;
 
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -30,7 +30,7 @@ import static android.content.ContentValues.TAG;
 import static android.widget.Toast.LENGTH_LONG;
 import static com.mapbox.mapboxsdk.Mapbox.getApplicationContext;
 
-public class DialogNotification extends AppCompatDialogFragment
+public class DialogNotification extends DialogFragment
 {
   private HostelOnlineUser hostelOnlineUser;
 
@@ -54,7 +54,7 @@ public class DialogNotification extends AppCompatDialogFragment
     db = FirebaseFirestore.getInstance();
 
 
-    LayoutInflater inflater =getLayoutInflater();
+    LayoutInflater inflater = getActivity().getLayoutInflater();
     View view = inflater.inflate(R.layout.activity_dialog_notification, null);
 
     newMessage = view.findViewById(R.id.inmessage);
@@ -62,17 +62,17 @@ public class DialogNotification extends AppCompatDialogFragment
     newDate = view.findViewById(R.id.indate);
     newhostelId = view.findViewById(R.id.inhostelid);
     newDate.setText(java.time.LocalDate.now().toString());
-    newhostelId.setText("1yfhbdzcxTGnlChR4jWa");
+    newhostelId.setText(hostelOnlineUser.getUserHostelId());
 
     builder.setView(view).setTitle("NEW NOTIFICATION")
-    .setNegativeButton("CANCEL", new DialogInterface.OnClickListener()
-    {
-      @Override
-      public void onClick(DialogInterface dialog, int which)
-      {
+            .setNegativeButton("CANCEL", new DialogInterface.OnClickListener()
+            {
+              @Override
+              public void onClick(DialogInterface dialog, int which)
+              {
 
-      }
-    }).setPositiveButton("DONE", new DialogInterface.OnClickListener()
+              }
+            }).setPositiveButton("DONE", new DialogInterface.OnClickListener()
     {
       @Override
       public void onClick(DialogInterface dialog, int which)
@@ -89,7 +89,7 @@ public class DialogNotification extends AppCompatDialogFragment
         notification.put("message", newMessage.getText().toString());
         notification.put("title", newTitle.getText().toString());
         db.collection("Notifications")
-        .add(notification).addOnSuccessListener(new OnSuccessListener<DocumentReference>()
+                .add(notification).addOnSuccessListener(new OnSuccessListener<DocumentReference>()
         {
           @Override
           public void onSuccess(DocumentReference documentReference)
@@ -100,14 +100,14 @@ public class DialogNotification extends AppCompatDialogFragment
 
           }
         })
-        .addOnFailureListener(new OnFailureListener()
-        {
-          @Override
-          public void onFailure(@NonNull Exception e)
-          {
-            Log.w(TAG, "Error adding document", e);
-          }
-        });
+                .addOnFailureListener(new OnFailureListener()
+                {
+                  @Override
+                  public void onFailure(@NonNull Exception e)
+                  {
+                    Log.w(TAG, "Error adding document", e);
+                  }
+                });
 
       }
     });

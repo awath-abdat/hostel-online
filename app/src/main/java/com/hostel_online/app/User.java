@@ -12,6 +12,7 @@ import timber.log.Timber;
 import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Parcelable;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
@@ -87,14 +88,19 @@ public class User extends AppCompatActivity
       @Override public boolean onMenuItemClick(@NonNull MenuItem item) {
         switch (item.getItemId()) {
           case R.id.login_info: {
-            Intent UpdateIntent= new Intent(getApplicationContext(), edit_login_info.class);
-            UpdateIntent.putExtra("hostelOnlineUser",hostelOnlineUser);
-            startActivity(UpdateIntent);
+
+
+
+              Intent intent = new Intent(getApplicationContext(), edit_login_info.class);
+
+              startActivity(intent);
+
            // FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
-          //  transaction.replace(R.id.fragment_container, new user_home(hostelOnlineUser));
+           // transaction.replace(R.id.fragment_container, new user_home(hostelOnlineUser));
            // transaction.addToBackStack(null);
-          //  item.setChecked(true);
-           // transaction.commit();
+           ////item.setChecked(true);
+            //transaction.commit();
+
           }
           break;
           case R.id.menu_profile: {
@@ -103,6 +109,7 @@ public class User extends AppCompatActivity
             transaction.addToBackStack(null);
             item.setChecked(true);
             transaction.commit();
+
           }
           break;
           case R.id.menu_add_hostel:
@@ -112,15 +119,9 @@ public class User extends AppCompatActivity
             startActivity(sendAddHostelIntent);
           }
           break;
-          case R.id.notifications:
-          {
-          //NotificationDialog dn = new NotificationDialog(hostelOnlineUser);
-          //  dn.show(getSupportFragmentManager(), "Notification");
-          DialogNotification dn = new DialogNotification(hostelOnlineUser);
-            dn.show(getSupportFragmentManager().beginTransaction(), "Notification");
-          
-            
-          }
+
+
+
           case R.id.logout:
           {
             FirebaseAuth auth = FirebaseAuth.getInstance();
@@ -130,11 +131,11 @@ public class User extends AppCompatActivity
             startActivity(sendMainActivityIntent);
           }
           break;
-          //case R.id.add_notification:
-         // {
-          //  DialogNotification dn = new DialogNotification(hostelOnlineUser);
-         //   dn.show(getSupportFragmentManager(), "Notification");
-          //}
+          case R.id.add_notification:
+          {
+            DialogNotification dn = new DialogNotification(hostelOnlineUser);
+            dn.show(getSupportFragmentManager(), "Notification");
+          }
         }
         return false;
       }

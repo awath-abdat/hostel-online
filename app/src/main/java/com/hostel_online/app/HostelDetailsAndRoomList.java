@@ -234,7 +234,6 @@ public class HostelDetailsAndRoomList extends AppCompatActivity
         {
           String roomLabel = data.getStringExtra("RoomLabel");
           String MomoNumber = data.getStringExtra("MoMoNumber");
-          Log.w("MoMo Number", MomoNumber);
           if(roomLabel != null && MomoNumber != null)
           {
             RequestOptions opts = RequestOptions.builder().setCollectionApiSecret(MY_SECRET_API_KEY).setCollectionPrimaryKey(MY_SECRET_SUBSCRIPTION_KEY).setCollectionUserId(MYSECRET_USER_ID).setTargetEnvironment("sandbox").build();

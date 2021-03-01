@@ -76,7 +76,7 @@ public class Dialog extends Activity
             tvTrippleRoomButton.setBackgroundColor(ResourcesCompat.getColor(getResources(), R.color.transparent, null));
             tvAnyRoomButton.setBackgroundColor(ResourcesCompat.getColor(getResources(), R.color.transparent, null));
           }
-            break;
+          break;
           case "Double":
           {
             tvSingleRoomButton.setBackgroundColor(ResourcesCompat.getColor(getResources(), R.color.transparent, null));
@@ -85,7 +85,7 @@ public class Dialog extends Activity
             tvTrippleRoomButton.setBackgroundColor(ResourcesCompat.getColor(getResources(), R.color.transparent, null));
             tvAnyRoomButton.setBackgroundColor(ResourcesCompat.getColor(getResources(), R.color.transparent, null));
           }
-            break;
+          break;
           case "Tripple":
           {
             tvSingleRoomButton.setBackgroundColor(ResourcesCompat.getColor(getResources(), R.color.transparent, null));
@@ -94,7 +94,7 @@ public class Dialog extends Activity
             tvTrippleRoomButton.setTextColor(ResourcesCompat.getColor(getResources(), R.color.white, null));
             tvAnyRoomButton.setBackgroundColor(ResourcesCompat.getColor(getResources(), R.color.transparent, null));
           }
-            break;
+          break;
           default:
           {
             tvSingleRoomButton.setBackgroundColor(ResourcesCompat.getColor(getResources(), R.color.transparent, null));
@@ -103,7 +103,7 @@ public class Dialog extends Activity
             tvAnyRoomButton.setBackgroundColor(ResourcesCompat.getColor(getResources(), R.color.uicyan, null));
             tvAnyRoomButton.setTextColor(ResourcesCompat.getColor(getResources(), R.color.white, null));
           }
-            break;
+          break;
         }
         tvSingleRoomButton.setOnClickListener(v -> {
           Intent data = new Intent();
