@@ -15,6 +15,7 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.annotation.RequiresApi;
+import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.app.AppCompatDialogFragment;
 
 import com.google.android.gms.tasks.OnFailureListener;
@@ -53,7 +54,7 @@ public class DialogNotification extends AppCompatDialogFragment
     db = FirebaseFirestore.getInstance();
 
 
-    LayoutInflater inflater = getActivity().getLayoutInflater();
+    LayoutInflater inflater =getLayoutInflater();
     View view = inflater.inflate(R.layout.activity_dialog_notification, null);
 
     newMessage = view.findViewById(R.id.inmessage);

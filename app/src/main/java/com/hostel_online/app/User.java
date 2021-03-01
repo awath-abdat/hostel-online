@@ -117,7 +117,7 @@ public class User extends AppCompatActivity
           //NotificationDialog dn = new NotificationDialog(hostelOnlineUser);
           //  dn.show(getSupportFragmentManager(), "Notification");
           DialogNotification dn = new DialogNotification(hostelOnlineUser);
-            dn.show(getSupportFragmentManager(), "Notification");
+            dn.show(getSupportFragmentManager().beginTransaction(), "Notification");
           
             
           }

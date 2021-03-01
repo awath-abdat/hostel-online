@@ -12,8 +12,7 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.HostelOnline">
         <activity android:name=".edit_login_info"></activity>
-        <activity android:name=".Dialog"
-            android:theme="@style/DialogTheme"/>
+
         <activity android:name=".CaptureLocation" />
         <activity android:name=".User" />
         <activity android:name=".EditOrAddHostel" />
