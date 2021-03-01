@@ -51,7 +51,7 @@ public class User extends AppCompatActivity
     hostelOnlineUser = (HostelOnlineUser)userIntentReceive.getParcelableExtra("HostelOnlineUser");
     BottomAppBar bottomAppBar = findViewById(R.id.bottom_app_bar);
     FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
-    transaction.replace(R.id.fragment_container, new FragmentNotifications(hostelOnlineUser));
+    transaction.replace(R.id.fragment_container, new user_home(hostelOnlineUser));
     transaction.addToBackStack(null);
     transaction.commit();
     if(hostelOnlineUser != null && hostelOnlineUser.getUserRole() != null)
@@ -78,7 +78,7 @@ public class User extends AppCompatActivity
       public void onClick(View v)
       {
         FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
-        transaction.replace(R.id.fragment_container, new FragmentNotifications(hostelOnlineUser));
+        transaction.replace(R.id.fragment_container, new user_home(hostelOnlineUser));
         transaction.addToBackStack(null);
         transaction.commit();
       }
@@ -114,9 +114,12 @@ public class User extends AppCompatActivity
           break;
           case R.id.notifications:
           {
-            Intent sendHostelIdIntent = new Intent(getApplicationContext(), FragmentNotifications.class);
-            sendHostelIdIntent.putExtra("hostelOnlineUser", hostelOnlineUser.getUserHostelId());
-            startActivity(sendHostelIdIntent);
+          //NotificationDialog dn = new NotificationDialog(hostelOnlineUser);
+          //  dn.show(getSupportFragmentManager(), "Notification");
+          DialogNotification dn = new DialogNotification(hostelOnlineUser);
+            dn.show(getSupportFragmentManager(), "Notification");
+          
+            
           }
           case R.id.logout:
           {
@@ -127,11 +130,11 @@ public class User extends AppCompatActivity
             startActivity(sendMainActivityIntent);
           }
           break;
-          case R.id.add_notification:
-          {
-            DialogNotification dn = new DialogNotification(hostelOnlineUser);
-            dn.show(getSupportFragmentManager(), "Notification");
-          }
+          //case R.id.add_notification:
+         // {
+          //  DialogNotification dn = new DialogNotification(hostelOnlineUser);
+         //   dn.show(getSupportFragmentManager(), "Notification");
+          //}
         }
         return false;
       }
